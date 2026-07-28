@@ -1,0 +1,43 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando curso…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Curso não encontrado."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/cursos'])"
+    />
+  } @else if (item(); as curso) {
+    <header class="page__header">
+      <div>
+        <h1 class="page__title">{{ curso.nome }}</h1>
+      </div>
+      <div class="page__actions">
+        <a mat-stroked-button [routerLink]="['/cursos', curso.id, 'editar']">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </a>
+        <button mat-stroked-button color="warn" type="button" (click)="excluir()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+        <a mat-button routerLink="/cursos">Voltar</a>
+      </div>
+    </header>
+
+    <dl class="detail-grid">
+      <dt>Nome</dt>
+      <dd>{{ curso.nome }}</dd>
+      <dt>Situação</dt>
+      <dd>
+        <app-status-chip
+          [label]="Labels.situacaoCurso(curso.situacao)"
+          [highlighted]="curso.situacao === 'ATIVO'"
+        />
+      </dd>
+    </dl>
+  }
+</section>
