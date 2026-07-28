@@ -1,21 +1,34 @@
 package br.com.academico.infrastructure.configuration;
 
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * CORS do MVP liberando a origin do frontend Angular (DA-053 / ADR-002).
+ * CORS configurável por profile via {@code app.cors.allowed-origins} (DA-053 / ADR-002).
  */
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
-    public static final String FRONTEND_ORIGIN = "http://localhost:4200";
+    private final String[] allowedOrigins;
+
+    public WebConfiguration(@Value("${app.cors.allowed-origins:}") String[] allowedOrigins) {
+        this.allowedOrigins = Arrays.stream(allowedOrigins)
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toArray(String[]::new);
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        if (allowedOrigins.length == 0) {
+            return;
+        }
         registry.addMapping("/api/**")
-                .allowedOrigins(FRONTEND_ORIGIN)
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

@@ -16,3 +16,8 @@ logging:
   level:
     root: INFO
     br.com.academico: INFO
+
+app:
+  cors:
+    # Lista vazia por padrão; definir CORS_ALLOWED_ORIGINS com origins reais (separadas por vírgula).
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:}
