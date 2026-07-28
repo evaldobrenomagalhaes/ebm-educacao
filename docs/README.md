@@ -213,6 +213,7 @@ A organização detalhada está descrita no **Documento 16 — Estrutura do Proj
 - CRUD de períodos letivos (com listagem filtrada por texto, situação e data);
 - CRUD de turmas (com listagem filtrada e consulta de turmas disponíveis);
 - Realizar, confirmar e cancelar matrícula;
+- Listar e buscar matrículas (visão global, com filtros avançados);
 - Consultar matrículas por aluno e por turma (com filtros avançados);
 - Controle de vagas;
 - Validação das regras de negócio;
@@ -230,6 +231,8 @@ A organização detalhada está descrita no **Documento 16 — Estrutura do Proj
 - Realizar Matrícula;
 - Confirmar Matrícula;
 - Cancelar Matrícula;
+- Listar Matrículas (com filtros avançados);
+- Buscar Matrícula por Id;
 - Consultar Matrículas por Aluno (com filtros avançados);
 - Consultar Matrículas por Turma (com filtros avançados).
 
@@ -347,7 +350,7 @@ mvn verify
 | `/api/disciplinas` | CRUD |
 | `/api/periodos-letivos` | Cadastro / consulta |
 | `/api/turmas` | CRUD |
-| `/api/matriculas` | Realizar, confirmar, cancelar |
+| `/api/matriculas` | Listar, buscar por id, realizar, confirmar, cancelar |
 | `/api/alunos/{id}/matriculas` | Consultar matrículas por aluno |
 | `/api/turmas/{id}/matriculas` | Consultar matrículas por turma |
 

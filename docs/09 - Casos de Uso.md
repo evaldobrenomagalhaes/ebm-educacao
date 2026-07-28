@@ -62,7 +62,7 @@ Eles não devem:
 
 Após a análise do domínio foram identificados os seguintes Casos de Uso.
 
-O escopo da versão 1.0 (MVP) inclui o **CRUD completo** de Aluno, Curso, Disciplina, **Período Letivo** e Turma, o ciclo de matrícula (**Realizar**, **Confirmar** e **Cancelar**), as consultas de matrículas por aluno e por turma, as **listagens com critérios avançados** (§4.5) e a consulta de **turmas disponíveis**.
+O escopo da versão 1.0 (MVP) inclui o **CRUD completo** de Aluno, Curso, Disciplina, **Período Letivo** e Turma, o ciclo de matrícula (**Realizar**, **Confirmar** e **Cancelar**), a **listagem e busca global de matrículas**, as consultas de matrículas por aluno e por turma, as **listagens com critérios avançados** (§4.5) e a consulta de **turmas disponíveis**.
 
 Nas listagens (`Listar*` / `Consultar*`), os filtros são **opcionais** (consulta sem critério continua válida). Os critérios de texto, status, relacionamento e data do inventário §4.5 **fazem parte do MVP**. A **paginação** permanece no **curto prazo** (Documento 21, §4.1).
 
@@ -122,8 +122,12 @@ O **fechamento** do período letivo permanece fora deste inventário (médio pra
 | RealizarMatricula | Criar uma matrícula para um aluno |
 | ConfirmarMatricula | Confirmar uma matrícula existente |
 | CancelarMatricula | Cancelar uma matrícula existente |
+| ListarMatriculas | Listar matrículas (visão global, com critérios opcionais) |
+| BuscarMatriculaPorId | Obter o detalhe de uma matrícula |
 | ConsultarMatriculasPorAluno | Listar as matrículas de um aluno |
 | ConsultarMatriculasPorTurma | Listar as matrículas de uma turma |
+
+`ListarMatriculas` e `BuscarMatriculaPorId` atendem às telas `/matriculas` e `/matriculas/:id` (Documento 24). `ConsultarMatriculasPorAluno` / `ConsultarMatriculasPorTurma` **permanecem** como atalhos nos detalhes de aluno e turma; a listagem global não os substitui.
 
 Todos os Casos de Uso representam ações do negócio e seguem a convenção **Verbo + Substantivo**.
 
@@ -183,6 +187,20 @@ Uso: tela administrativa de alunos e apoio à matrícula.
 | `comVagas` | booleano | vagas disponíveis > 0 | MVP |
 
 `ConsultarTurmasDisponiveis` (MVP) = `status=ABERTA` + `comVagas=true` (+ opcionalmente `periodoLetivoId` / `disciplinaId`).
+
+### ListarMatriculas
+
+Uso: tela administrativa `/matriculas` (Documento 24). Todos os filtros são **opcionais**.
+
+| Filtro | Tipo | Base documental | Escopo |
+|--------|------|-----------------|--------|
+| `status` | enum `PENDENTE` / `CONFIRMADA` / `CANCELADA` | Status da Matrícula | MVP |
+| `alunoId` | relacionamento | vínculo | MVP |
+| `turmaId` | relacionamento | vínculo | MVP |
+| `periodoLetivoId` | relacionamento indireto | via Turma | MVP |
+| `disciplinaId` | relacionamento indireto | via Turma | MVP |
+
+Os filtros indiretos (`periodoLetivoId` / `disciplinaId`) reutilizam o mesmo inventário das consultas por aluno/turma, por consistência.
 
 ### ConsultarMatriculasPorAluno / ConsultarMatriculasPorTurma
 

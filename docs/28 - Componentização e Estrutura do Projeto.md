@@ -104,13 +104,15 @@ Exemplo `features/aluno/`:
 
 Turma e matrícula acrescentam ações extras nas páginas (abrir/fechar; confirmar/cancelar), sem pastas técnicas separadas obrigatórias.
 
+A feature `matricula/` **não** usa rota `/:id/editar`: apenas lista (`matricula-list`), nova (`matricula-form` / realizar) e detalhe (`matricula-detail` com confirmar/cancelar), alinhado ao [Documento 24](24%20-%20Navegação,%20Telas%20e%20Fluxos.md) §5.3.
+
 ---
 
 # 7. Rotas
 
 - Rotas raiz em `app.routes.ts`, alinhadas ao menu do [Documento 24](24%20-%20Navegação,%20Telas%20e%20Fluxos.md).
 - Preferir **lazy loading** por feature (`loadChildren` / `loadComponent`).
-- Paths: `/`, `/cursos`, `/disciplinas`, `/periodos-letivos`, `/alunos`, `/turmas`, `/matriculas`, com `novo`, `:id` e `:id/editar` conforme o padrão CRUD.
+- Paths: `/`, `/cursos`, `/disciplinas`, `/periodos-letivos`, `/alunos`, `/turmas`, `/matriculas`, com `novo`, `:id` e `:id/editar` conforme o padrão CRUD — **exceto matrícula**, que não possui `/:id/editar` (só lista, nova e detalhe).
 
 ---
 

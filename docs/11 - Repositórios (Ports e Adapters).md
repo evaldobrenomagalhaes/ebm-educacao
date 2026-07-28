@@ -142,6 +142,8 @@ Cada Repository será responsável apenas pelo Aggregate correspondente.
 
 `PeriodoLetivoRepository` cobre o CRUD de períodos letivos do modelo acadêmico do projeto, inclusive consultas filtradas (texto, situação e data).
 
+`MatriculaRepository` expõe, entre outros, `buscarPorId`, `salvar`, `existePorAlunoETurma`, `listarPorAluno`, `listarPorTurma` e `listar()` — este último para a listagem global (`ListarMatriculas`, Documento 09 §4.4); filtros opcionais são aplicados na camada de aplicação.
+
 ---
 
 # 6. Responsabilidades dos Repositórios

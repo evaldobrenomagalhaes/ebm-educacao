@@ -90,16 +90,18 @@ Rotas por recurso:
 
 ## 5.3 Matrículas
 
+Matrícula **não** segue o padrão CRUD com `/:id/editar`: apenas lista, nova e detalhe (ações confirmar/cancelar no detalhe).
+
 | Rota | Tela | Casos de uso |
 |------|------|--------------|
-| `/matriculas` | Lista (filtros: status, aluno, turma) | Consultas e visão operacional |
-| `/matriculas/nova` | Realizar matrícula (aluno + turma; apoio a turmas disponíveis) | RealizarMatricula, ConsultarTurmasDisponiveis |
-| `/matriculas/:id` | Detalhe | ConfirmarMatricula, CancelarMatricula |
+| `/matriculas` | Lista (filtros: status, aluno, turma) | `ListarMatriculas` |
+| `/matriculas/nova` | Realizar matrícula (aluno + turma; apoio a turmas disponíveis) | `RealizarMatricula`, `ConsultarTurmasDisponiveis` |
+| `/matriculas/:id` | Detalhe | `BuscarMatriculaPorId`, `ConfirmarMatricula`, `CancelarMatricula` |
 
 **Atalhos:**
 
-- Detalhe do aluno → lista de matrículas do aluno + “Nova matrícula” (aluno pré-selecionado);
-- Detalhe da turma → lista de matrículas da turma + “Nova matrícula” (turma pré-selecionada).
+- Detalhe do aluno → lista de matrículas do aluno (`ConsultarMatriculasPorAluno`) + “Nova matrícula” (aluno pré-selecionado);
+- Detalhe da turma → lista de matrículas da turma (`ConsultarMatriculasPorTurma`) + “Nova matrícula” (turma pré-selecionada).
 
 **Turmas disponíveis:** não exigem item próprio no menu. São apoio em **Matrículas → Nova** (e, opcionalmente, filtro/atalho na lista de Turmas), cobrindo `ConsultarTurmasDisponiveis`.
 

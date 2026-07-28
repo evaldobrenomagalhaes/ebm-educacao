@@ -101,6 +101,8 @@ O mesmo padrão aplica-se a `/api/cursos`, `/api/disciplinas`, `/api/periodos-le
 
 | Caso de uso | HTTP |
 |-------------|------|
+| ListarMatriculas | `GET /api/matriculas?…` |
+| BuscarMatriculaPorId | `GET /api/matriculas/{id}` |
 | RealizarMatricula | `POST /api/matriculas` |
 | ConfirmarMatricula | `POST /api/matriculas/{id}/confirmar` |
 | CancelarMatricula | `POST /api/matriculas/{id}/cancelar` |
