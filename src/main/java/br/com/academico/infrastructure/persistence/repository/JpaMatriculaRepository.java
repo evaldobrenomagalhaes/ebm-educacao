@@ -44,4 +44,9 @@ public class JpaMatriculaRepository implements MatriculaRepository {
     public List<Matricula> listarPorTurma(TurmaId turmaId) {
         return springDataRepository.findByTurmaId(turmaId);
     }
+
+    @Override
+    public List<Matricula> listar() {
+        return springDataRepository.findAll();
+    }
 }

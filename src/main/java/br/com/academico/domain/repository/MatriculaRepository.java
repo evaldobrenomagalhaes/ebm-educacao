@@ -25,4 +25,10 @@ public interface MatriculaRepository {
     List<Matricula> listarPorAluno(AlunoId alunoId);
 
     List<Matricula> listarPorTurma(TurmaId turmaId);
+
+    /**
+     * Listagem global de matrículas ({@code ListarMatriculas}, doc 09 §4.4).
+     * Filtros opcionais são aplicados na camada de aplicação.
+     */
+    List<Matricula> listar();
 }
