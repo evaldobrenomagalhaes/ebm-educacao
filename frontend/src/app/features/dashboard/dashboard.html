@@ -1,0 +1,48 @@
+<section class="page dashboard">
+  <header class="page__header">
+    <div>
+      <h1 class="page__title">Início</h1>
+      <p class="dashboard__lead">Visão geral e atalhos do Sistema Acadêmico.</p>
+    </div>
+    <div class="page__actions">
+      <a mat-flat-button color="primary" routerLink="/matriculas/nova">Nova matrícula</a>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando indicadores…</span>
+    </div>
+  } @else {
+    @if (error()) {
+      <div class="state-block">
+        <p>{{ error() }}</p>
+        <button mat-stroked-button type="button" (click)="load()">Tentar novamente</button>
+      </div>
+    }
+
+    <div class="dashboard__grid">
+      @for (card of cards(); track card.title; let i = $index) {
+        <mat-card class="dashboard__card" [style.animation-delay.ms]="i * 60">
+          <mat-card-header>
+            <mat-icon mat-card-avatar aria-hidden="true">{{ card.icon }}</mat-icon>
+            <mat-card-title>{{ card.title }}</mat-card-title>
+            <mat-card-subtitle>Contagem atual</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="dashboard__value">{{ card.value }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <a mat-button color="primary" [routerLink]="card.link">{{ card.linkLabel }}</a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    <section class="dashboard__guide section-block">
+      <h2 class="section-block__title">Fluxo sugerido</h2>
+      <p>Curso / Disciplina / Período Letivo → Turma (aberta) → Aluno → Matrícula</p>
+    </section>
+  }
+</section>

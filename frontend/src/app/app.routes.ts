@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./features/home/home-placeholder').then((m) => m.HomePlaceholder),
+    loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
   },
   { path: '**', redirectTo: '' },
 ];

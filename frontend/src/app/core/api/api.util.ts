@@ -7,9 +7,11 @@ export function apiUrl(path: string): string {
   return `${environment.apiUrl}${normalized}`;
 }
 
-export function toHttpParams(filters: Record<string, string | number | boolean | null | undefined>): HttpParams {
+export function toHttpParams(
+  filters: object,
+): HttpParams {
   let params = new HttpParams();
-  for (const [key, value] of Object.entries(filters)) {
+  for (const [key, value] of Object.entries(filters as Record<string, unknown>)) {
     if (value === null || value === undefined || value === '') {
       continue;
     }
