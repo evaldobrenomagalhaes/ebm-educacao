@@ -1,0 +1,42 @@
+---
+description: HttpClient, services por feature, ProblemDetail e estados de UI
+globs: frontend/**/*.ts
+alwaysApply: false
+---
+
+# Frontend — API e erros (docs 26, 27)
+
+## Base URL
+
+- `environment.apiUrl` **absoluto** (dev/Compose: `http://localhost:8080`).
+- Chamadas: `${apiUrl}/api/...` — **não** usar hostname Docker `backend` no browser.
+- Sem header `Authorization` no MVP.
+- Sem geração automática de cliente OpenAPI no MVP.
+
+## Services
+
+Um service HttpClient por feature:
+
+| Feature | Service | Base path |
+|---------|---------|-----------|
+| Aluno | `AlunoService` | `/api/alunos` |
+| Curso | `CursoService` | `/api/cursos` |
+| Disciplina | `DisciplinaService` | `/api/disciplinas` |
+| Período Letivo | `PeriodoLetivoService` | `/api/periodos-letivos` |
+| Turma | `TurmaService` | `/api/turmas` |
+| Matrícula | `MatriculaService` | `/api/matriculas` |
+
+Tipos TS alinhados aos `*Request` / `*Response` do backend. Dashboard compõe esses services — **sem** `/api/dashboard`.
+
+## Contrato
+
+- JSON **camelCase**; listagens = **array** no body (sem envelope).
+- Enums string (`ATIVO`, `PENDENTE`, `ABERTA`, …); IDs UUID.
+- Filtros: query params opcionais; enviar só os preenchidos.
+
+## Erros e estados (doc 26)
+
+- Interceptor `ProblemDetail` em `core/`; services **não** fazem toast genérico.
+- Feedback híbrido: campo + snackbar + empty em 404.
+- Estados de tela: **loading / empty / error / ready**; sucesso via snackbar.
+- Validação client: required/formato apenas; regras de negócio na API (400/409/422).

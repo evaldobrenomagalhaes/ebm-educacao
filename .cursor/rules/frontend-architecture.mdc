@@ -1,0 +1,29 @@
+---
+description: Arquitetura Angular — features, pastas e limites do MVP
+globs: frontend/**/*.{ts,html,scss}
+alwaysApply: false
+---
+
+# Frontend — arquitetura (docs 23, 28, ADR-004)
+
+- **Angular** standalone + `app.routes.ts`; preferir lazy load por feature.
+- Organização por **feature** de domínio + transversais: `core/`, `shared/`, `layout/`.
+- Estado **local** por tela/feature — **sem NgRx** no MVP.
+- **Sem autenticação** no MVP (todas as telas acessíveis).
+- A UI **não** duplica invariantes (vagas, turma aberta, duplicidade de matrícula, etc.) — só orquestra HTTP e feedback.
+- Features **não** dependem umas das outras sem necessidade; preferir rotas + service da própria feature.
+- Extrair para `shared/` só o usado em **duas ou mais** features.
+- Testes MVP: unitários de services + `ng build`; E2E fora do MVP (doc 29).
+
+## Árvore canônica (resumo)
+
+```text
+frontend/src/app/
+├── core/          # interceptor, api helpers, snackbar
+├── shared/        # UI reutilizável
+├── layout/        # shell (sidebar/drawer)
+└── features/      # dashboard, aluno, curso, disciplina,
+                   # periodo-letivo, turma, matricula
+```
+
+Detalhe de pastas e naming: Documento 28.

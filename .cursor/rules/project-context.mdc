@@ -7,6 +7,8 @@ alwaysApply: true
 
 API REST em **Java 21** + **Spring Boot 3** + **PostgreSQL**, com DDD e Arquitetura Hexagonal. Pacote raiz: `br.com.academico`.
 
+SPA **Angular** (TypeScript) em `frontend/`, porta **4200** (ADR-004 / Documento 23). Consome a API; **não** reimplementa regras de domínio.
+
 ## Fonte da verdade
 
 A documentação aprovada em `docs/` prevalece sobre inferências. Consulte antes de modelar ou alterar comportamento:
@@ -16,10 +18,11 @@ A documentação aprovada em `docs/` prevalece sobre inferências. Consulte ante
 | Princípios | 01, 02 |
 | Domínio | 03–08 |
 | Casos de uso | 09 |
-| Arquitetura / pacotes | 10, 16, 22 (ADR-001) |
+| Arquitetura / pacotes | 10, 16, 22 (ADR-001–004) |
 | Ports / JPA | 11, 13 |
 | Exceções | 14 |
 | Testes / qualidade | 15, 18 |
 | Convenções | 19 |
+| Frontend | 23–29 |
 
-Não invente entidades, casos de uso ou invariantes fora do que está documentado no MVP (Documento 21, §3).
+Não invente entidades, casos de uso ou invariantes fora do que está documentado no MVP (Documento 21, §3). A UI não inventa operações nem duplica invariantes do backend.

@@ -1,0 +1,29 @@
+---
+description: Navegação, shell Material e tema EBM Edu
+globs: frontend/**/*.{ts,html,scss}
+alwaysApply: false
+---
+
+# Frontend — UX e navegação (docs 24, 25)
+
+## Menu
+
+```text
+Início | Cursos | Disciplinas | Períodos Letivos | Alunos | Turmas | Matrículas
+```
+
+Ordem segue dependência do domínio. Brand: **EBM Edu**.
+
+## Padrão de telas
+
+- CRUD (Curso, Disciplina, Período, Aluno, Turma): **lista + detalhe + formulário**.
+- Matrícula: área no menu + atalhos nos detalhes de Aluno/Turma; **sem** rota `/:id/editar` (lista, nova, detalhe com confirmar/cancelar).
+- Início: **dashboard** com cards/atalhos (contadores via services existentes).
+- Labels e rotas na **linguagem ubíqua** (doc 02).
+
+## Shell e visual
+
+- **Angular Material**; sidebar desktop (≥ ~960px) + **drawer** no mobile.
+- Tema **laranja institucional** (primary ≈ `#E65100`); shell escuro + superfície clara; sem dark mode global no MVP.
+- Tokens/tema em `styles/` — detalhes no Documento 25.
+- Validação no client mínima (required/formato); negócio e invariantes só na API.
