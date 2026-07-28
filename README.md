@@ -19,7 +19,7 @@ API REST para gestão acadêmica (matrículas, turmas, cursos e alunos), com **D
 docker compose up
 ```
 
-API em `http://localhost:8080` · Swagger em `http://localhost:8080/swagger-ui.html`.
+API em `http://localhost:8080` · Swagger em `http://localhost:8080/swagger-ui.html` · Frontend (Angular/nginx) em `http://localhost:4200`.
 
 Backend com Maven (banco via Compose):
 

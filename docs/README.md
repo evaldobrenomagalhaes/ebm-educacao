@@ -297,7 +297,7 @@ Variáveis de conexão (`POSTGRES_*`, `SPRING_DATASOURCE_*`, URLs entre serviço
 
 CORS no MVP libera a origin do frontend (`http://localhost:4200`).
 
-> Enquanto o frontend não estiver especificado, o serviço pode existir como placeholder no Compose; os fluxos da API podem ser validados via Swagger UI ou HTTP client (curl, Postman, Insomnia).
+O serviço `frontend` faz build Angular e serve a SPA via **nginx** (`4200:80`). A UI no browser chama a API em `http://localhost:8080` (não use o hostname interno `backend` no JavaScript).
 
 ## Alternativa: API com Maven (desenvolvimento)
 
@@ -358,7 +358,7 @@ Os caminhos finais poderão ser refinados na implementação; a lista acima cobr
 
 ## Frontend
 
-SPA em **Angular** (TypeScript) para consumir os principais fluxos da API — série [Documentos 23–29](23%20-%20Arquitetura%20do%20Frontend.md). Enquanto a UI não estiver completa, os fluxos podem ser validados via **Swagger UI** (OpenAPI) ou HTTP client (curl, Postman, Insomnia).
+SPA em **Angular** (TypeScript) no módulo `frontend/`, alinhada aos [Documentos 23–29](23%20-%20Arquitetura%20do%20Frontend.md). No Compose: `http://localhost:4200` (nginx). Em desenvolvimento local: `cd frontend && npm start` (consome `http://localhost:8080`). Os fluxos também podem ser validados via **Swagger UI** (OpenAPI).
 
 ---
 
@@ -410,13 +410,12 @@ Também valide:
 
 # Limitações Conhecidas
 
-- Código de backend/frontend ainda em construção; este README descreve o contrato de entrega e a documentação de domínio.
-- Documentação de frontend 23–29 aprovada; implementação da UI em andamento.
 - Soft delete e auditoria estão no plano de evolução (diferenciais).
 - Publicação de imagens em registry e deploy automatizado (CD) são evolução — o MVP usa Compose **local**.
 - Segurança avançada (JWT, RBAC, OAuth2) não faz parte do escopo mínimo da versão 1.0 Junior.
 - Período Letivo faz parte do modelo acadêmico do projeto, mas o **fechamento** do período é evolução (médio prazo).
-- Badges de build/cobertura, screenshot do pipeline, GIF da aplicação e coleção Postman ficam para depois da implementação (dependem de artefato real em execução).
+- CI do frontend (job Node) e E2E ficam no roadmap do Documento 29.
+- Badges de build/cobertura, screenshot do pipeline, GIF da aplicação e coleção Postman ficam como diferencial de apresentação.
 
 ---
 
