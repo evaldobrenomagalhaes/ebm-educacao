@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="ebm-edu"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Ruleset enxuto do projeto (Documento 18).
+        Categorias PMD 7: errorprone, bestpractices (inclui unused code), multithreading.
+        Exclusões justificadas para não explodir o MVP com ruído de estilo.
+    </description>
+
+    <rule ref="category/java/errorprone.xml">
+        <!-- Paths REST repetidos (/{id}) são convenção Spring, não duplicação acidental. -->
+        <exclude name="AvoidDuplicateLiterals"/>
+        <!-- Exceções de domínio não são serializadas entre JVMs no MVP. -->
+        <exclude name="MissingSerialVersionUID"/>
+        <!-- Campo domainEvents vs accessor domainEvents() é padrão do aggregate. -->
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
+    </rule>
+
+    <rule ref="category/java/bestpractices.xml">
+        <!-- SLF4J com placeholders já evita custo de toString; guardas são ruído. -->
+        <exclude name="GuardLogStatement"/>
+        <!-- AggregateRoot é base DDD intencional sem métodos abstratos. -->
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
+    </rule>
+
+    <rule ref="category/java/multithreading.xml">
+        <!-- Map local por request; não há acesso concorrente compartilhado. -->
+        <exclude name="UseConcurrentHashMap"/>
+    </rule>
+
+</ruleset>
