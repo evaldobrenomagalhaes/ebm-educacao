@@ -4,7 +4,7 @@
 >
 > Fase: Análise
 >
-> Status: Em construção
+> Status: Aprovado
 
 ---
 
