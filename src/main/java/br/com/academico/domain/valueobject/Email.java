@@ -1,8 +1,11 @@
 package br.com.academico.domain.valueobject;
 
+import jakarta.persistence.Embeddable;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Embeddable
 public record Email(String endereco) {
 
     private static final Pattern PADRAO = Pattern.compile(

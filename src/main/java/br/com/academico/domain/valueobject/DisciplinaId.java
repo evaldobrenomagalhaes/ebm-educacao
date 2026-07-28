@@ -1,9 +1,12 @@
 package br.com.academico.domain.valueobject;
 
+import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+@Embeddable
 public record DisciplinaId(UUID valor) implements Serializable {
 
     public DisciplinaId {
