@@ -37,6 +37,7 @@ Cada registro segue a estrutura:
 |-----|--------|--------|
 | ADR-001 | Organização de Pacotes: Camada vs. Módulo de Negócio | Aceito |
 | ADR-002 | Stack e Decisões Técnicas do MVP | Aceito |
+| ADR-003 | `@Transactional` nos Casos de Uso (MVP) | Aceito |
 
 ---
 
@@ -137,11 +138,50 @@ A documentação descrevia a stack em termos amplos (`Spring Boot 3.x`, PostgreS
 
 ---
 
-# 6. Relação com os Documentos Anteriores
+# 6. ADR-003 — `@Transactional` nos Casos de Uso (MVP)
+
+**Status:** Aceito
+
+**Data:** 2026-07-28
+
+## Contexto
+
+A MD-013 (Documento 09) estabelece que os Casos de Uso não devem depender diretamente do Spring Framework, preservando a camada de aplicação independente da tecnologia. No MVP Spring Boot, no entanto, o gerenciamento de transações via `@Transactional` nos use cases é o padrão idiomático e já está aplicado de forma consistente na implementação.
+
+Remover `@Transactional` da aplicação exigiria reescrever dezenas de use cases (boundary transacional em adapter, aspect externo ou wrapper), sem ganho funcional para o escopo do desafio.
+
+## Decisão
+
+No **MVP**, os Casos de Uso **podem** usar `@Transactional` (Spring) para delimitar a unidade de trabalho.
+
+Restrições que permanecem:
+
+- O **domínio** (`domain/`) continua **livre de Spring** (sem anotações ou APIs do framework).
+- Regras de negócio e invariantes permanecem nas entidades / Aggregate Roots (MD-014).
+- Persistência continua via ports do domínio (MD-015); `@Transactional` apenas orquestra a transação.
+
+Esta decisão é uma **exceção pragmática** à letra estrita da MD-013, limitada ao acoplamento transacional na camada de aplicação.
+
+## Alternativas consideradas
+
+1. **Remover `@Transactional` dos use cases** e empurrar a boundary para adapters/controllers ou um decorator — alinhamento estrito à MD-013; custo alto (rewrite de ~33 use cases) sem benefício no MVP.
+2. **Programmatic `TransactionTemplate`** injetado — ainda acopla a Spring e aumenta verbosidade.
+3. **Manter `@Transactional` nos use cases** — adotada para o MVP.
+
+## Consequências
+
+- Testes unitários de use cases que exercitam persistência real ou proxies Spring precisam do contexto transacional (ou mocks das ports).
+- A camada de aplicação fica acoplada a Spring Transaction apenas no MVP; isso **deve ser reavaliado** se surgirem adapters ou runtimes **não-Spring** (CLI, worker sem Boot, outro framework).
+- Documentos 09 (MD-013) e 10 devem ser lidos em conjunto com este ADR.
+
+---
+
+# 7. Relação com os Documentos Anteriores
 
 | Documento | Contribuição |
 |-----------|--------------|
 | Documento 08 | Publicação de eventos (MD-011 / mecanismo Spring) |
+| Documento 09 | Casos de uso e MD-013 (exceção pragmática via ADR-003) |
 | Documento 10 | Arquitetura Hexagonal e stack |
 | Documento 13 | Persistência JPA e Flyway (DA-051) |
 | Documento 14 | Exceções e ProblemDetail (DA-018) |
@@ -152,12 +192,12 @@ A documentação descrevia a stack em termos amplos (`Spring Boot 3.x`, PostgreS
 
 ---
 
-# 7. Considerações Finais
+# 8. Considerações Finais
 
 Os ADRs documentam decisões que afetam a estrutura e a evolução do sistema. Novos registros devem ser adicionados quando houver escolha arquitetural relevante, com status explícito (Aceito, Superado, etc.).
 
 ---
 
-# 8. Próximos Passos
+# 9. Próximos Passos
 
 Este documento complementa a documentação de arquitetura. A visão geral e o índice completo permanecem no `README.md`.

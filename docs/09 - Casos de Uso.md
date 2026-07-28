@@ -540,11 +540,11 @@ Os consumidores dos eventos permanecem desacoplados do Caso de Uso.
 
 ### Decisão
 
-Os Casos de Uso não dependerão diretamente do Spring Framework.
+Os Casos de Uso não dependerão diretamente do Spring Framework, **exceto** pelo uso de `@Transactional` na camada de aplicação no MVP, conforme [ADR-003](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (Documento 22). O domínio permanece livre de Spring.
 
 ### Justificativa
 
-A camada de aplicação deve permanecer independente da tecnologia utilizada, facilitando testes e reduzindo o acoplamento.
+A camada de aplicação deve permanecer independente da tecnologia utilizada, facilitando testes e reduzindo o acoplamento. No MVP Spring Boot, delimitar a transação com `@Transactional` nos use cases é a exceção pragmática registrada no ADR-003; a reavaliação ocorre se surgirem adapters não-Spring.
 
 ---
 

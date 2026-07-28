@@ -401,7 +401,7 @@ Também valide:
 - Status de matrícula: `PENDENTE`, `CONFIRMADA`, `CANCELADA`.
 - Autenticação JWT / Spring Security ficam como **evolução** (não bloqueiam o MVP Junior).
 - Frontend será especificado em documento dedicado; porta **4200** já definida no Compose.
-- Detalhamento em [Documento 22 — ADR](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (ADR-002).
+- Detalhamento em [Documento 22 — ADR](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (ADR-002; ADR-003 aceita `@Transactional` nos use cases no MVP).
 
 ---
 
