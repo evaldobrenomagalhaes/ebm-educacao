@@ -22,5 +22,9 @@ export const routes: Routes = [
     path: 'alunos',
     loadChildren: () => import('./features/aluno/aluno.routes').then((m) => m.alunoRoutes),
   },
+  {
+    path: 'turmas',
+    loadChildren: () => import('./features/turma/turma.routes').then((m) => m.turmaRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -1,0 +1,60 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando turma…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Turma não encontrada."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/turmas'])"
+    />
+  } @else if (item(); as turma) {
+    <header class="page__header">
+      <div>
+        <h1 class="page__title">{{ turma.codigo }}</h1>
+      </div>
+      <div class="page__actions">
+        @if (turma.status === 'FECHADA') {
+          <button mat-flat-button color="primary" type="button" [disabled]="actionBusy()" (click)="abrir()">
+            Abrir
+          </button>
+        } @else {
+          <button mat-stroked-button type="button" [disabled]="actionBusy()" (click)="fechar()">
+            Fechar
+          </button>
+        }
+        <a mat-stroked-button [routerLink]="['/turmas', turma.id, 'editar']">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </a>
+        <button mat-stroked-button color="warn" type="button" (click)="excluir()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+        <a mat-button routerLink="/turmas">Voltar</a>
+      </div>
+    </header>
+
+    <dl class="detail-grid">
+      <dt>Código</dt>
+      <dd>{{ turma.codigo }}</dd>
+      <dt>Disciplina</dt>
+      <dd>{{ disciplinaNome() }}</dd>
+      <dt>Período letivo</dt>
+      <dd>{{ periodoCodigo() }}</dd>
+      <dt>Capacidade máxima</dt>
+      <dd>{{ turma.capacidadeMaxima }}</dd>
+      <dt>Vagas disponíveis</dt>
+      <dd>{{ turma.vagasDisponiveis }}</dd>
+      <dt>Status</dt>
+      <dd>
+        <app-status-chip
+          [label]="Labels.statusTurma(turma.status)"
+          [highlighted]="turma.status === 'ABERTA'"
+        />
+      </dd>
+    </dl>
+  }
+</section>

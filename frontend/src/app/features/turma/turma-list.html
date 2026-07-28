@@ -1,0 +1,133 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Turmas</h1>
+    <div class="page__actions">
+      <button mat-stroked-button type="button" (click)="filtrarDisponiveis()">
+        Disponíveis
+      </button>
+      <a mat-flat-button color="primary" routerLink="/turmas/novo">
+        <mat-icon>add</mat-icon>
+        Nova turma
+      </a>
+    </div>
+  </header>
+
+  <form class="filters" [formGroup]="filterForm" (ngSubmit)="filtrar()">
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="ABERTA">Aberta</mat-option>
+        <mat-option value="FECHADA">Fechada</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Disciplina</mat-label>
+      <mat-select formControlName="disciplinaId">
+        <mat-option value="">Todas</mat-option>
+        @for (d of disciplinas(); track d.id) {
+          <mat-option [value]="d.id">{{ d.nome }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Período letivo</mat-label>
+      <mat-select formControlName="periodoLetivoId">
+        <mat-option value="">Todos</mat-option>
+        @for (p of periodos(); track p.id) {
+          <mat-option [value]="p.id">{{ p.codigo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Com vagas</mat-label>
+      <mat-select formControlName="comVagas">
+        <mat-option value="">Todas</mat-option>
+        <mat-option value="true">Sim</mat-option>
+        <mat-option value="false">Não</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filters__actions">
+      <button mat-flat-button color="primary" type="submit">Filtrar</button>
+      <button mat-stroked-button type="button" (click)="limpar()">Limpar</button>
+    </div>
+  </form>
+
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando turmas…</span>
+    </div>
+  } @else if (error()) {
+    <div class="state-block">
+      <p>{{ error() }}</p>
+      <button mat-stroked-button type="button" (click)="load()">Tentar novamente</button>
+    </div>
+  } @else if (items().length === 0) {
+    <app-empty-state
+      message="Nenhuma turma encontrada."
+      actionLabel="Nova turma"
+      (action)="router.navigate(['/turmas', 'novo'])"
+    />
+  } @else {
+    <div class="table-wrap">
+      <table mat-table [dataSource]="items()" class="mat-elevation-z0">
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="disciplinaId">
+          <th mat-header-cell *matHeaderCellDef>Disciplina</th>
+          <td mat-cell *matCellDef="let row">{{ nomeDisciplina(row.disciplinaId) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="periodoLetivoId">
+          <th mat-header-cell *matHeaderCellDef>Período</th>
+          <td mat-cell *matCellDef="let row">{{ codigoPeriodo(row.periodoLetivoId) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <app-status-chip
+              [label]="Labels.statusTurma(row.status)"
+              [highlighted]="row.status === 'ABERTA'"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vagasDisponiveis">
+          <th mat-header-cell *matHeaderCellDef>Vagas</th>
+          <td mat-cell *matCellDef="let row">{{ row.vagasDisponiveis }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-button type="button" color="primary" (click)="$event.stopPropagation(); ver(row.id)">
+              Ver
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="ver(row.id)"
+          style="cursor: pointer"
+        ></tr>
+      </table>
+    </div>
+  }
+</section>

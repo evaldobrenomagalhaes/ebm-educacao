@@ -1,0 +1,92 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Turma não encontrada."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/turmas'])"
+    />
+  } @else {
+    <header class="page__header">
+      <h1 class="page__title">{{ isEdit() ? 'Editar turma' : 'Nova turma' }}</h1>
+      <div class="page__actions">
+        <a mat-button routerLink="/turmas">Cancelar</a>
+      </div>
+    </header>
+
+    <form class="form-grid form-grid--two" [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="codigo" />
+        @if (form.controls.codigo.hasError('required')) {
+          <mat-error>Informe o código</mat-error>
+        } @else if (form.controls.codigo.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Capacidade máxima</mat-label>
+        <input matInput type="number" formControlName="capacidadeMaxima" min="1" />
+        @if (form.controls.capacidadeMaxima.hasError('required')) {
+          <mat-error>Informe a capacidade</mat-error>
+        } @else if (form.controls.capacidadeMaxima.hasError('min')) {
+          <mat-error>Capacidade deve ser ao menos 1</mat-error>
+        } @else if (form.controls.capacidadeMaxima.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Disciplina</mat-label>
+        <mat-select formControlName="disciplinaId">
+          @for (d of disciplinas(); track d.id) {
+            <mat-option [value]="d.id">{{ d.nome }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.disciplinaId.hasError('required')) {
+          <mat-error>Selecione a disciplina</mat-error>
+        } @else if (form.controls.disciplinaId.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Período letivo</mat-label>
+        <mat-select formControlName="periodoLetivoId">
+          @for (p of periodos(); track p.id) {
+            <mat-option [value]="p.id">{{ p.codigo }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.periodoLetivoId.hasError('required')) {
+          <mat-error>Selecione o período</mat-error>
+        } @else if (form.controls.periodoLetivoId.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (!isEdit()) {
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="ABERTA">Aberta</mat-option>
+            <mat-option value="FECHADA">Fechada</mat-option>
+          </mat-select>
+          @if (form.controls.status.errors?.['api']; as msg) {
+            <mat-error>{{ msg }}</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <div class="page__actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Salvando…' : 'Salvar' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>
