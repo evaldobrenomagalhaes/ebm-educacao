@@ -1,0 +1,22 @@
+---
+description: Mensagens de commit em português (Conventional Commits)
+alwaysApply: true
+---
+
+# Mensagens de commit
+
+Sempre que criar um commit neste repositório:
+
+- Redija a mensagem **em português** (assunto e corpo).
+- Use **Conventional Commits**: `tipo(escopo opcional): descrição`.
+- Tipos comuns: `feat`, `fix`, `docs`, `test`, `build`, `ci`, `chore`, `refactor`.
+- Descrição no imperativo/presente, curta (≈72 caracteres no assunto), focada no **porquê**.
+- Não use inglês no assunto (exceto nomes próprios, APIs, ferramentas: JaCoCo, Flyway, Spring).
+
+```text
+# ❌ Evitar
+docs: add root README pointing to project delivery docs
+
+# ✅ Preferir
+docs: adiciona README na raiz apontando para a documentação do projeto
+```
