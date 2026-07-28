@@ -1,5 +1,7 @@
 package br.com.academico.domain.model;
 
+import br.com.academico.domain.event.TurmaAberta;
+import br.com.academico.domain.event.TurmaFechada;
 import br.com.academico.domain.exception.BusinessRuleViolationException;
 import br.com.academico.domain.exception.SemVagasException;
 import br.com.academico.domain.exception.TurmaEncerradaException;
@@ -24,7 +26,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "LY_TURMA")
-public class Turma {
+public class Turma extends AggregateRoot {
 
     @EmbeddedId
     @AttributeOverride(name = "valor", column = @Column(name = "id"))
@@ -107,6 +109,7 @@ public class Turma {
             throw new BusinessRuleViolationException("Turma já está aberta");
         }
         this.status = StatusTurma.ABERTA;
+        registrarEvento(new TurmaAberta(id));
     }
 
     public void fechar() {
@@ -114,6 +117,7 @@ public class Turma {
             throw new BusinessRuleViolationException("Turma já está fechada");
         }
         this.status = StatusTurma.FECHADA;
+        registrarEvento(new TurmaFechada(id));
     }
 
     /**

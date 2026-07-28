@@ -1,5 +1,8 @@
 package br.com.academico.domain.model;
 
+import br.com.academico.domain.event.MatriculaCancelada;
+import br.com.academico.domain.event.MatriculaConfirmada;
+import br.com.academico.domain.event.MatriculaRealizada;
 import br.com.academico.domain.exception.BusinessRuleViolationException;
 import br.com.academico.domain.valueobject.AlunoId;
 import br.com.academico.domain.valueobject.MatriculaId;
@@ -23,7 +26,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "LY_MATRICULA")
-public class Matricula {
+public class Matricula extends AggregateRoot {
 
     @EmbeddedId
     @AttributeOverride(name = "valor", column = @Column(name = "id"))
@@ -56,6 +59,7 @@ public class Matricula {
         matricula.alunoId = alunoId;
         matricula.turmaId = turmaId;
         matricula.status = StatusMatricula.PENDENTE;
+        matricula.registrarEvento(new MatriculaRealizada(matricula.id, alunoId, turmaId));
         return matricula;
     }
 
@@ -69,6 +73,7 @@ public class Matricula {
             );
         }
         this.status = StatusMatricula.CONFIRMADA;
+        registrarEvento(new MatriculaConfirmada(id, alunoId, turmaId));
     }
 
     /**
@@ -82,6 +87,7 @@ public class Matricula {
             );
         }
         this.status = StatusMatricula.CANCELADA;
+        registrarEvento(new MatriculaCancelada(id, alunoId, turmaId));
     }
 
     public boolean estaPendente() {
