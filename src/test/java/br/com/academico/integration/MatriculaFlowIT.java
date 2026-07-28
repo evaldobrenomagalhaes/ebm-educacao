@@ -73,6 +73,22 @@ class MatriculaFlowIT extends AbstractIntegrationTest {
     }
 
     @Test
+    void deveRecusarMatriculaQuandoAlunoInativo() throws Exception {
+        Catalogo catalogo = cadastrarCatalogo(5, StatusTurma.ABERTA);
+        AlunoResponse aluno = cadastrarAluno("Fábio Inativo", SituacaoAcademica.INATIVO);
+
+        mockMvc.perform(post("/api/matriculas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "alunoId", aluno.id(),
+                                "turmaId", catalogo.turmaId()
+                        ))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.title").value("Regra de negócio violada"))
+                .andExpect(jsonPath("$.detail").value("Aluno inativo não pode realizar matrícula"));
+    }
+
+    @Test
     void deveRecusarMatriculaEmTurmaFechada() throws Exception {
         Catalogo catalogo = cadastrarCatalogo(5, StatusTurma.FECHADA);
         AlunoResponse aluno = cadastrarAluno("Carla Dias");
@@ -139,11 +155,15 @@ class MatriculaFlowIT extends AbstractIntegrationTest {
     }
 
     private AlunoResponse cadastrarAluno(String nome) throws Exception {
+        return cadastrarAluno(nome, SituacaoAcademica.ATIVO);
+    }
+
+    private AlunoResponse cadastrarAluno(String nome, SituacaoAcademica situacao) throws Exception {
         String sufixo = UUID.randomUUID().toString().substring(0, 8);
         return postJson("/api/alunos", Map.of(
                 "nome", nome,
                 "email", "aluno." + sufixo + "@exemplo.com",
-                "situacaoAcademica", SituacaoAcademica.ATIVO
+                "situacaoAcademica", situacao
         ), AlunoResponse.class);
     }
 

@@ -4,6 +4,7 @@ import br.com.academico.domain.event.MatriculaCancelada;
 import br.com.academico.domain.event.MatriculaConfirmada;
 import br.com.academico.domain.event.MatriculaRealizada;
 import br.com.academico.domain.exception.BusinessRuleViolationException;
+import br.com.academico.domain.exception.DuplicateMatriculaException;
 import br.com.academico.domain.valueobject.AlunoId;
 import br.com.academico.domain.valueobject.StatusMatricula;
 import br.com.academico.domain.valueobject.TurmaId;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MatriculaTest {
@@ -54,6 +56,18 @@ class MatriculaTest {
         assertThatThrownBy(() -> Matricula.realizar(alunoId, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessageContaining("Turma");
+    }
+
+    @Test
+    void inv04_garantirUnicaNaTurmaAceitaQuandoNaoExiste() {
+        assertThatCode(() -> Matricula.garantirUnicaNaTurma(false)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void inv04_garantirUnicaNaTurmaRejeitaQuandoJaExiste() {
+        assertThatThrownBy(() -> Matricula.garantirUnicaNaTurma(true))
+                .isInstanceOf(DuplicateMatriculaException.class)
+                .hasMessageContaining("Aluno já possui matrícula nesta turma");
     }
 
     @Test

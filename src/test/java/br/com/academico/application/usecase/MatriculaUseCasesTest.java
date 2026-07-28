@@ -5,6 +5,7 @@ import br.com.academico.application.command.ConfirmarMatriculaCommand;
 import br.com.academico.application.command.RealizarMatriculaCommand;
 import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.domain.event.DomainEventPublisher;
+import br.com.academico.domain.exception.BusinessRuleViolationException;
 import br.com.academico.domain.exception.DuplicateMatriculaException;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.model.Aluno;
@@ -107,6 +108,17 @@ class MatriculaUseCasesTest {
         assertThatThrownBy(() -> realizar.executar(
                 new RealizarMatriculaCommand(aluno.getId().valor(), turma.getId().valor())))
                 .isInstanceOf(DuplicateMatriculaException.class);
+    }
+
+    @Test
+    void realizarDeveFalharQuandoAlunoInativo() {
+        Aluno inativo = Aluno.cadastrar("Inativo", Email.de("inativo@email.com"), SituacaoAcademica.INATIVO);
+        when(alunoRepository.buscarPorId(inativo.getId())).thenReturn(Optional.of(inativo));
+
+        assertThatThrownBy(() -> realizar.executar(
+                new RealizarMatriculaCommand(inativo.getId().valor(), turma.getId().valor())))
+                .isInstanceOf(BusinessRuleViolationException.class)
+                .hasMessageContaining("Aluno inativo não pode realizar matrícula");
     }
 
     @Test
