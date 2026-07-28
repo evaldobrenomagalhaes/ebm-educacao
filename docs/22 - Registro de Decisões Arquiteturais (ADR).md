@@ -134,7 +134,7 @@ A documentação descrevia a stack em termos amplos (`Spring Boot 3.x`, PostgreS
 - README e Documentos 08, 10, 13, 14, 16, 19 e 20 devem refletir este ADR.
 - Credenciais locais são apenas para Compose/`dev`; `prod` usa variáveis de ambiente.
 - Nome do banco com hífen (`ebm-edu`) exige aspas em SQL cru.
-- Frontend (framework) permanece **a especificar**; a porta 4200 já está fixada.
+- Porta frontend **4200** fixada; framework detalhado no **ADR-004** e Documento 23.
 
 ---
 
@@ -176,7 +176,45 @@ Esta decisão é uma **exceção pragmática** à letra estrita da MD-013, limit
 
 ---
 
-# 7. Relação com os Documentos Anteriores
+# 7. ADR-004 — Arquitetura do Frontend (Angular)
+
+**Status:** Aceito
+
+**Data:** 2026-07-28
+
+## Contexto
+
+O Compose e o ADR-002 já fixavam a porta do frontend (`4200`) e o CORS correspondente, mas o framework e a organização da SPA permaneciam “a especificar”. Era necessário fechar a stack da UI para os Documentos 23–29 e a implementação do módulo `frontend/`.
+
+## Decisão
+
+| Item | Escolha |
+|------|---------|
+| Framework | **Angular** (TypeScript; versão estável na implementação) |
+| Organização | Por **feature** de domínio + `core/` + `shared/` + `layout/` |
+| HTTP | **HttpClient** + services manuais por feature |
+| Estado | **Local** por tela/feature (sem NgRx no MVP) |
+| Contrato | OpenAPI/Swagger como consulta; **sem** codegen de cliente no MVP |
+| Entrega | Build estático + **nginx** no Compose (`4200:80`) |
+
+A UI não duplica regras de domínio; autenticação permanece fora do MVP (Documento 20).
+
+## Alternativas consideradas
+
+1. **React + Vite** ou **Vue + Vite** — viáveis; descartadas no MVP por maior carga de escolha de libs (router, forms, HTTP).
+2. **Organização só por tipo técnico** (`components/`, `services/`) — rejeitada por dispersar o domínio.
+3. **Cliente gerado a partir do OpenAPI** — adiado ao roadmap (Documento 29).
+4. **Store global (NgRx)** — desnecessário sem auth nem estado compartilhado complexo.
+
+## Consequências
+
+- Documento 23 é a fonte de verdade da arquitetura do frontend.
+- README, ADR-002 (consequência de framework) e o índice em `docs/README.md` devem refletir Angular.
+- Documentos 24–29 detalham navegação, UX, erros, API, pastas e testes/roadmap.
+
+---
+
+# 8. Relação com os Documentos Anteriores
 
 | Documento | Contribuição |
 |-----------|--------------|
@@ -189,15 +227,16 @@ Esta decisão é uma **exceção pragmática** à letra estrita da MD-013, limit
 | Documento 19 | Convenções, logging e profiles |
 | Documento 20 | Segurança, Bean Validation e CORS |
 | Documento 21 | Plano de evolução e gatilho de reavaliação do ADR-001 |
+| Documento 23 | Arquitetura do frontend (ADR-004) |
 
 ---
 
-# 8. Considerações Finais
+# 9. Considerações Finais
 
 Os ADRs documentam decisões que afetam a estrutura e a evolução do sistema. Novos registros devem ser adicionados quando houver escolha arquitetural relevante, com status explícito (Aceito, Superado, etc.).
 
 ---
 
-# 9. Próximos Passos
+# 10. Próximos Passos
 
 Este documento complementa a documentação de arquitetura. A visão geral e o índice completo permanecem no `README.md`.

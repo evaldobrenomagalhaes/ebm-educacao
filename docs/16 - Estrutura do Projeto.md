@@ -38,7 +38,7 @@ Na raiz do repositório, o ambiente local é orquestrado pelo Docker Compose (MV
 .
 ├── docker-compose.yml
 ├── Dockerfile              # multi-stage Maven → eclipse-temurin:21-jre
-├── frontend/               # módulo frontend (a especificar) + Dockerfile; porta 4200
+├── frontend/               # Angular — Documentos 23–29; porta 4200
 ├── docs/
 └── src
     ├── main

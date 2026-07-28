@@ -52,7 +52,7 @@ Mais do que implementar funcionalidades, este projeto busca demonstrar decisões
 | Checkstyle | Qualidade |
 | SpotBugs | Análise estática |
 | PMD | Qualidade |
-| Frontend | A especificar (porta `4200` no Compose) |
+| Frontend | Angular (TypeScript); porta `4200` no Compose — Documento 23 |
 
 ---
 
@@ -187,7 +187,7 @@ flowchart LR
 .
 ├── docker-compose.yml
 ├── Dockerfile                 # backend (multi-stage Maven → eclipse-temurin:21-jre)
-├── frontend/                  # a especificar (+ Dockerfile); porta 4200
+├── frontend/                  # Angular (Documentos 23–29) + Dockerfile; porta 4200
 ├── docs/
 └── src/
     ├── main/
@@ -272,13 +272,13 @@ Serviços previstos no `docker-compose.yml`:
 |---------|--------|-------|
 | `db` | PostgreSQL 18 | `5432` |
 | `backend` | API Spring Boot | `8080` |
-| `frontend` | UI (a especificar) | `4200` |
+| `frontend` | Angular (SPA) | `4200` |
 
 Após o Compose subir:
 
 - API: `http://localhost:8080`
 - Swagger UI (springdoc-openapi): `http://localhost:8080/swagger-ui.html` (UI em `/swagger-ui/index.html`; spec em `/v3/api-docs`)
-- Frontend: `http://localhost:4200` (quando o módulo estiver especificado)
+- Frontend: `http://localhost:4200` (Angular; arquitetura no Documento 23)
 
 Credenciais locais do banco (Compose / profile `dev`):
 
@@ -355,7 +355,7 @@ Os caminhos finais poderão ser refinados na implementação; a lista acima cobr
 
 ## Frontend
 
-Frontend simples para consumir os principais fluxos da API — **a especificar** em documento dedicado. Enquanto isso, os fluxos podem ser validados via **Swagger UI** (OpenAPI) ou HTTP client (curl, Postman, Insomnia).
+SPA em **Angular** (TypeScript) para consumir os principais fluxos da API — série [Documentos 23–29](23%20-%20Arquitetura%20do%20Frontend.md). Enquanto a UI não estiver completa, os fluxos podem ser validados via **Swagger UI** (OpenAPI) ou HTTP client (curl, Postman, Insomnia).
 
 ---
 
@@ -400,15 +400,15 @@ Também valide:
 - Separação em camadas alinhada à Arquitetura Hexagonal (ports/adapters).
 - Status de matrícula: `PENDENTE`, `CONFIRMADA`, `CANCELADA`.
 - Autenticação JWT / Spring Security ficam como **evolução** (não bloqueiam o MVP Junior).
-- Frontend será especificado em documento dedicado; porta **4200** já definida no Compose.
-- Detalhamento em [Documento 22 — ADR](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (ADR-002; ADR-003 aceita `@Transactional` nos use cases no MVP).
+- Frontend em **Angular** (Documento 23 / ADR-004); porta **4200** no Compose.
+- Detalhamento em [Documento 22 — ADR](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (ADR-002; ADR-003; ADR-004).
 
 ---
 
 # Limitações Conhecidas
 
 - Código de backend/frontend ainda em construção; este README descreve o contrato de entrega e a documentação de domínio.
-- Frontend ainda não especificado em documento dedicado (serviço previsto no Compose).
+- Documentação de frontend 23–29 aprovada; implementação da UI em andamento.
 - Soft delete e auditoria estão no plano de evolução (diferenciais).
 - Publicação de imagens em registry e deploy automatizado (CD) são evolução — o MVP usa Compose **local**.
 - Segurança avançada (JWT, RBAC, OAuth2) não faz parte do escopo mínimo da versão 1.0 Junior.
@@ -493,8 +493,15 @@ Toda a modelagem arquitetural encontra-se em `docs/`. Índice alinhado aos arqui
 | 20 | [20 - Segurança.md](20%20-%20Segurança.md) | Segurança |
 | 21 | [21 - Plano de Evolução do Sistema.md](21%20-%20Plano%20de%20Evolução%20do%20Sistema.md) | Plano de evolução |
 | 22 | [22 - Registro de Decisões Arquiteturais (ADR).md](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) | ADR |
+| 23 | [23 - Arquitetura do Frontend.md](23%20-%20Arquitetura%20do%20Frontend.md) | Arquitetura do frontend (Angular) |
+| 24 | [24 - Navegação, Telas e Fluxos.md](24%20-%20Navegação,%20Telas%20e%20Fluxos.md) | Navegação, telas e fluxos |
+| 25 | [25 - Layout, Design System e UX.md](25%20-%20Layout,%20Design%20System%20e%20UX.md) | Layout, design system e UX |
+| 26 | [26 - Estados da Interface e Erros.md](26%20-%20Estados%20da%20Interface%20e%20Erros.md) | Estados da interface e erros |
+| 27 | [27 - Comunicação com a API.md](27%20-%20Comunicação%20com%20a%20API.md) | Comunicação com a API |
+| 28 | [28 - Componentização e Estrutura do Projeto.md](28%20-%20Componentização%20e%20Estrutura%20do%20Projeto.md) | Componentização e estrutura do frontend |
+| 29 | [29 - Testes e Roadmap do Frontend.md](29%20-%20Testes%20e%20Roadmap%20do%20Frontend.md) | Testes e roadmap do frontend |
 
-> Não há Documento 12 numerado no conjunto atual; o arquivo de repositórios é o Documento 11.
+> Não há Documento 12 numerado no conjunto atual; o arquivo de repositórios é o Documento 11. A série de frontend é os Documentos 23–29.
 
 ---
 
