@@ -1,5 +1,6 @@
 package br.com.academico.domain.model;
 
+import br.com.academico.domain.exception.BusinessRuleViolationException;
 import br.com.academico.domain.valueobject.AlunoId;
 import br.com.academico.domain.valueobject.Email;
 import br.com.academico.domain.valueobject.SituacaoAcademica;
@@ -63,6 +64,17 @@ public class Aluno {
             throw new IllegalArgumentException(campo + " não pode ser vazio");
         }
         return normalizado;
+    }
+
+    /**
+     * Doc 04 — situação acadêmica influencia operações; aluno inativo não pode se matricular.
+     */
+    public void garantirAptaParaMatricula() {
+        if (situacaoAcademica == SituacaoAcademica.INATIVO) {
+            throw new BusinessRuleViolationException(
+                    "Aluno inativo não pode realizar matrícula"
+            );
+        }
     }
 
     public AlunoId getId() {

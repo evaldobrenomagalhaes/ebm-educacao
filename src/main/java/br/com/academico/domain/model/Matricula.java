@@ -4,6 +4,7 @@ import br.com.academico.domain.event.MatriculaCancelada;
 import br.com.academico.domain.event.MatriculaConfirmada;
 import br.com.academico.domain.event.MatriculaRealizada;
 import br.com.academico.domain.exception.BusinessRuleViolationException;
+import br.com.academico.domain.exception.DuplicateMatriculaException;
 import br.com.academico.domain.valueobject.AlunoId;
 import br.com.academico.domain.valueobject.MatriculaId;
 import br.com.academico.domain.valueobject.StatusMatricula;
@@ -52,6 +53,16 @@ public class Matricula extends AggregateRoot {
     private StatusMatricula status;
 
     protected Matricula() {
+    }
+
+    /**
+     * INV-04 / RN-08 — não pode existir matrícula duplicada do mesmo aluno na mesma turma.
+     * O use case consulta a port e delega a regra/exceção ao domínio.
+     */
+    public static void garantirUnicaNaTurma(boolean jaExiste) {
+        if (jaExiste) {
+            throw DuplicateMatriculaException.alunoNaTurma();
+        }
     }
 
     /**

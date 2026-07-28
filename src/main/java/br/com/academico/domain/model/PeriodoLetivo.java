@@ -1,5 +1,6 @@
 package br.com.academico.domain.model;
 
+import br.com.academico.domain.exception.PeriodoLetivoEncerradoException;
 import br.com.academico.domain.valueobject.PeriodoLetivoId;
 import br.com.academico.domain.valueobject.SituacaoPeriodoLetivo;
 import jakarta.persistence.AttributeOverride;
@@ -87,6 +88,15 @@ public class PeriodoLetivo {
 
     public boolean estaEncerrado() {
         return situacao == SituacaoPeriodoLetivo.ENCERRADO;
+    }
+
+    /**
+     * Período encerrado não aceita oferta de novas turmas.
+     */
+    public void garantirAbertoParaOferta() {
+        if (estaEncerrado()) {
+            throw PeriodoLetivoEncerradoException.doPeriodo();
+        }
     }
 
     public PeriodoLetivoId getId() {

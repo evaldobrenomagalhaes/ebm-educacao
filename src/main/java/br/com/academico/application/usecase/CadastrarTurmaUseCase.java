@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.academico.application.command.CadastrarTurmaCommand;
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.domain.exception.EntityNotFoundException;
-import br.com.academico.domain.exception.PeriodoLetivoEncerradoException;
 import br.com.academico.domain.model.PeriodoLetivo;
 import br.com.academico.domain.model.Turma;
 import br.com.academico.domain.repository.DisciplinaRepository;
@@ -43,9 +42,7 @@ public class CadastrarTurmaUseCase {
         }
         PeriodoLetivo periodo = periodoLetivoRepository.buscarPorId(periodoLetivoId)
                 .orElseThrow(() -> EntityNotFoundException.of("Período Letivo", command.periodoLetivoId()));
-        if (periodo.estaEncerrado()) {
-            throw PeriodoLetivoEncerradoException.doPeriodo();
-        }
+        periodo.garantirAbertoParaOferta();
 
         Turma turma = Turma.cadastrar(
                 command.codigo(),

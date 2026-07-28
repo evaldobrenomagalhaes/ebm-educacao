@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.academico.application.command.RealizarMatriculaCommand;
 import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.domain.event.DomainEventPublisher;
-import br.com.academico.domain.exception.DuplicateMatriculaException;
 import br.com.academico.domain.exception.EntityNotFoundException;
+import br.com.academico.domain.model.Aluno;
 import br.com.academico.domain.model.Matricula;
 import br.com.academico.domain.model.Turma;
 import br.com.academico.domain.repository.AlunoRepository;
@@ -42,17 +42,15 @@ public class RealizarMatriculaUseCase {
         AlunoId alunoId = AlunoId.de(command.alunoId());
         TurmaId turmaId = TurmaId.de(command.turmaId());
 
-        if (alunoRepository.buscarPorId(alunoId).isEmpty()) {
-            throw EntityNotFoundException.of("Aluno", command.alunoId());
-        }
+        Aluno aluno = alunoRepository.buscarPorId(alunoId)
+                .orElseThrow(() -> EntityNotFoundException.of("Aluno", command.alunoId()));
+        aluno.garantirAptaParaMatricula();
 
         Turma turma = turmaRepository.buscarPorId(turmaId)
                 .orElseThrow(() -> EntityNotFoundException.of("Turma", command.turmaId()));
         turma.garantirAbertaParaMatricula();
 
-        if (matriculaRepository.existePorAlunoETurma(alunoId, turmaId)) {
-            throw DuplicateMatriculaException.alunoNaTurma();
-        }
+        Matricula.garantirUnicaNaTurma(matriculaRepository.existePorAlunoETurma(alunoId, turmaId));
 
         Matricula matricula = Matricula.realizar(alunoId, turmaId);
         matriculaRepository.salvar(matricula);
