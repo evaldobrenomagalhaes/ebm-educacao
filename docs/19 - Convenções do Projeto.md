@@ -245,7 +245,7 @@ Sempre preferir exceções específicas do domínio.
 
 # 12. Logging
 
-Logs deverão possuir nível adequado.
+Logs deverão utilizar **SLF4J** e possuir nível adequado.
 
 | Nível | Utilização |
 |--------|------------|
@@ -258,7 +258,34 @@ Informações sensíveis nunca deverão ser registradas em logs.
 
 ---
 
-# 13. Commits
+# 13. Configuração da Aplicação
+
+A configuração será feita com **`application.yml`** (não `application.properties` como padrão do projeto).
+
+Profiles obrigatórios:
+
+| Profile | Uso |
+|---------|-----|
+| `dev` | Desenvolvimento local / Docker Compose; Swagger habilitado; CORS para `http://localhost:4200` |
+| `test` | Testes automatizados (ex.: Testcontainers) |
+| `prod` | Produção; Swagger desabilitado ou protegido; CORS restrito; credenciais via variáveis de ambiente |
+
+Arquivos previstos:
+
+```text
+src/main/resources/
+├── application.yml
+├── application-dev.yml
+├── application-test.yml
+├── application-prod.yml
+└── db/migration/
+```
+
+Credenciais locais de referência (apenas `dev` / Compose): database `ebm-edu`, usuário `admin`, senha `admin@123`.
+
+---
+
+# 14. Commits
 
 O projeto adotará o padrão Conventional Commits.
 
@@ -284,7 +311,7 @@ ci: adicionar workflow do GitHub Actions
 
 ---
 
-# 14. Estrutura das Branches
+# 15. Estrutura das Branches
 
 Fluxo simplificado baseado em Git Flow.
 
@@ -308,7 +335,7 @@ Cada funcionalidade será desenvolvida em uma branch específica.
 
 ---
 
-# 15. Pull Requests
+# 16. Pull Requests
 
 Todo Pull Request deverá conter:
 
@@ -320,7 +347,7 @@ Todo Pull Request deverá conter:
 
 ---
 
-# 16. Revisão de Código
+# 17. Revisão de Código
 
 Durante a revisão deverão ser observados:
 
@@ -334,7 +361,7 @@ Durante a revisão deverão ser observados:
 
 ---
 
-# 17. Decisões de Arquitetura
+# 18. Decisões de Arquitetura
 
 ## DA-037 — Convenções obrigatórias
 
@@ -396,7 +423,7 @@ Complementa DA-039 e DA-040: reduz boilerplate, reforça imutabilidade e tipagem
 
 ---
 
-# 18. Relação com os Documentos Anteriores
+# 19. Relação com os Documentos Anteriores
 
 | Documento | Contribuição |
 |-----------|--------------|
@@ -406,7 +433,7 @@ Complementa DA-039 e DA-040: reduz boilerplate, reforça imutabilidade e tipagem
 
 ---
 
-# 19. Referências
+# 20. Referências
 
 Este documento foi elaborado com base nas seguintes obras:
 
@@ -419,7 +446,7 @@ Este documento foi elaborado com base nas seguintes obras:
 
 ---
 
-# 20. Considerações Finais
+# 21. Considerações Finais
 
 As convenções definidas neste documento estabelecem um padrão único para o desenvolvimento do Sistema Acadêmico.
 
@@ -427,7 +454,7 @@ Sua adoção promove maior legibilidade, reduz divergências entre implementaç�
 
 ---
 
-# 21. Próximos Passos
+# 22. Próximos Passos
 
 Este documento servirá como base para:
 

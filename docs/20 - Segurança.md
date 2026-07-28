@@ -108,12 +108,14 @@ As validações ocorrerão em diferentes camadas.
 
 ## Camada de Apresentação
 
-Responsável por validar:
+Responsável por validar com **Jakarta Bean Validation** (`@Valid`, `@NotNull`, `@Size`, etc. nos request DTOs / records):
 
 - campos obrigatórios;
 - formato dos dados;
 - tamanho máximo e mínimo;
 - tipos de dados.
+
+Violações são traduzidas para HTTP 400 com corpo **RFC 7807 `ProblemDetail`**.
 
 ---
 
@@ -139,13 +141,14 @@ Entre elas:
 - prevenção de Cross-Site Scripting (XSS) quando aplicável;
 - proteção contra Cross-Site Request Forgery (CSRF), conforme o tipo de autenticação adotado;
 - validação de entradas;
-- tratamento adequado de exceções.
+- tratamento adequado de exceções;
+- **CORS** no MVP liberando a origin do frontend (`http://localhost:4200`); em `prod`, restringir às origins reais.
 
 ---
 
 # 8. Tratamento de Erros
 
-As mensagens retornadas ao cliente não deverão expor informações internas da aplicação.
+As mensagens retornadas ao cliente não deverão expor informações internas da aplicação. O contrato de erro da API utiliza **RFC 7807 `ProblemDetail`** (Documento 14).
 
 Exemplo:
 
@@ -180,7 +183,7 @@ Esses dados nunca deverão ser expostos em respostas da API ou registros de log.
 
 # 10. Logs
 
-Os registros de log deverão conter apenas informações necessárias para auditoria e diagnóstico.
+Os registros de log utilizarão **SLF4J** (implementação padrão do Spring Boot: Logback) e deverão conter apenas informações necessárias para auditoria e diagnóstico.
 
 Não deverão ser registrados:
 
@@ -293,11 +296,35 @@ Cada camada será responsável apenas pelas validações compatíveis com sua fu
 
 ### Decisão
 
-A aplicação não exporá detalhes internos em mensagens retornadas aos clientes.
+A aplicação não exporá detalhes internos em mensagens retornadas aos clientes. Erros da API usam **RFC 7807 `ProblemDetail`**.
 
 ### Justificativa
 
-Reduz o risco de vazamento de informações sensíveis.
+Reduz o risco de vazamento de informações sensíveis e padroniza o contrato de erro.
+
+---
+
+## DA-052 — Jakarta Bean Validation na API
+
+### Decisão
+
+A validação de entrada nos endpoints usará **Jakarta Bean Validation** nos request DTOs / records.
+
+### Justificativa
+
+Integração nativa com Spring MVC (`@Valid`) e separação clara entre validação sintática (apresentação) e regras de negócio (domínio).
+
+---
+
+## DA-053 — CORS liberado para o frontend no MVP
+
+### Decisão
+
+No profile `dev` / MVP, a API libera CORS para `http://localhost:4200`. Em `prod`, as origins devem ser restritas.
+
+### Justificativa
+
+Permite que o frontend no Compose consuma a API localmente sem autenticação no MVP Junior.
 
 ---
 
@@ -307,10 +334,11 @@ Reduz o risco de vazamento de informações sensíveis.
 |-----------|--------------|
 | Documento 07 | Invariantes do Domínio |
 | Documento 10 | Arquitetura Hexagonal |
-| Documento 12 | Persistência |
-| Documento 13 | Tratamento de Exceções |
-| Documento 17 | Qualidade de Código |
-| Documento 18 | Convenções do Projeto |
+| Documento 13 | Persistência |
+| Documento 14 | Tratamento de Exceções / ProblemDetail |
+| Documento 18 | Qualidade de Código |
+| Documento 19 | Convenções do Projeto |
+| Documento 22 | ADR-002 (stack e decisões técnicas) |
 
 ---
 
@@ -322,6 +350,8 @@ Este documento foi elaborado com base nas seguintes obras e referências:
 - OWASP Application Security Verification Standard (ASVS)
 - Spring Security Reference Documentation
 - RFC 7519 — JSON Web Token (JWT)
+- RFC 7807 — Problem Details for HTTP APIs
+- Jakarta Bean Validation Specification
 - Robert C. Martin — *Clean Architecture*
 
 ---

@@ -47,8 +47,9 @@ A primeira versão contempla:
 - Aplicação das regras de negócio do domínio;
 - API REST;
 - Persistência com JPA;
-- **Documentação da API com OpenAPI/Swagger**;
-- **Docker Compose** para ambiente local (PostgreSQL + backend + frontend) via `docker compose up`;
+- **Versionamento de schema com Flyway**;
+- **Documentação da API com springdoc-openapi**;
+- **Docker Compose** para ambiente local (PostgreSQL 18 + backend + frontend) via `docker compose up`;
 - Testes automatizados;
 - Pipeline de Integração Contínua.
 
