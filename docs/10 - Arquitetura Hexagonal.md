@@ -21,17 +21,20 @@ O objetivo é manter o domínio independente de frameworks, banco de dados e tec
 | Tecnologia | Versão |
 |---|---|
 | Java | 21 LTS |
-| Spring Boot | 3.x |
-| Spring Data JPA | 3.x |
-| Hibernate | 6.x |
+| Spring Boot | 3.5.16 |
+| Spring Data JPA | via BOM do Spring Boot |
+| Hibernate | 6.x (via Spring Boot) |
 | Maven | 3.9+ |
-| PostgreSQL | Definido (versão 1.0) |
+| PostgreSQL | 18 |
+| Flyway | Versionamento do schema |
 | Docker / Docker Compose | Ambiente local |
+| Imagem Docker (backend) | `eclipse-temurin:21-jre` (multi-stage Maven) |
+| OpenAPI | springdoc-openapi |
 | JUnit 5 | Testes |
 | Mockito | Testes |
 | Testcontainers | Testes de integração |
 
-Esta tabela é um espelho resumido da stack adotada. O `README.md` permanece a fonte de verdade mais detalhada (inclui OpenAPI/Swagger, ferramentas de qualidade e demais itens pós-arquitetura).
+Esta tabela é um espelho resumido da stack adotada. O `README.md` permanece a fonte de verdade mais detalhada (inclui qualidade, CORS, profiles e credenciais locais). Decisões consolidadas: [Documento 22 — ADR-002](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md).
 
 ---
 

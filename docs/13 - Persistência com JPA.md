@@ -112,10 +112,12 @@ Descrição:
 | Diretório | Responsabilidade |
 |------------|------------------|
 | repository | Implementações dos Repositórios |
-| configuration | Configurações do JPA e Hibernate |
-| migration | Versionamento do banco de dados |
+| configuration | Configurações do JPA, Hibernate e Flyway |
+| migration | (legado conceitual) scripts SQL ficam em `src/main/resources/db/migration` |
 
 As entidades do domínio permanecem na camada **domain**.
+
+Os scripts de migração **Flyway** residem em `src/main/resources/db/migration` (convenção Spring Boot), não como classes Java.
 
 ---
 
@@ -276,7 +278,7 @@ A estratégia de geração dos identificadores será definida na infraestrutura.
 
 # 12. Migração do Banco de Dados
 
-A evolução do banco ocorrerá através de migrações versionadas.
+A evolução do banco ocorrerá através de **Flyway**, com scripts versionados em `src/main/resources/db/migration`.
 
 As migrações serão responsáveis por:
 
@@ -284,6 +286,11 @@ As migrações serão responsáveis por:
 - alteração de estruturas;
 - criação de índices;
 - carga inicial de dados quando necessária.
+
+Configuração alinhada ao MVP:
+
+- `spring.flyway.enabled=true`;
+- `spring.jpa.hibernate.ddl-auto=validate` (não usar `update` / `create` em ambientes controlados).
 
 Essa estratégia garante rastreabilidade e evolução segura do esquema do banco.
 
@@ -347,11 +354,23 @@ Preserva as invariantes e a consistência do domínio.
 
 ### Decisão
 
-Eventos de Domínio serão publicados apenas após a conclusão bem-sucedida da transação.
+Eventos de Domínio serão publicados apenas após a conclusão bem-sucedida da transação, via `ApplicationEventPublisher` e `@TransactionalEventListener(phase = AFTER_COMMIT)` (ver Documento 08 e ADR-002).
 
 ### Justificativa
 
 Evita inconsistências entre estado persistido e eventos publicados.
+
+---
+
+## DA-051 — Versionamento do schema com Flyway
+
+### Decisão
+
+O schema do PostgreSQL será versionado com **Flyway**. Hibernate `ddl-auto` permanece em `validate` no MVP.
+
+### Justificativa
+
+Migrações explícitas, repetíveis e auditáveis; evita drift silencioso do schema gerado automaticamente.
 
 ---
 
@@ -379,6 +398,8 @@ Este documento foi elaborado com base nas seguintes obras:
 - Martin Fowler — *Patterns of Enterprise Application Architecture*
 - Gavin King — *Hibernate Documentation*
 - Jakarta Persistence Specification (JPA)
+- Flyway Documentation
+- Documento 22 — ADR-002 (stack e decisões técnicas)
 
 ---
 

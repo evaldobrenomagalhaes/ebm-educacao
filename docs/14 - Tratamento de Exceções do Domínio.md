@@ -195,7 +195,7 @@ Outras exceções poderão ser adicionadas conforme o domínio evoluir.
 
 # 9. Tratamento na API
 
-A camada de apresentação será responsável por converter exceções do domínio em respostas apropriadas.
+A camada de apresentação será responsável por converter exceções do domínio em respostas HTTP no formato **RFC 7807 Problem Details** (`ProblemDetail` do Spring).
 
 Exemplo conceitual:
 
@@ -205,16 +205,16 @@ Exemplo conceitual:
 | DuplicateMatriculaException | 409 Conflict |
 | SemVagasException | 409 Conflict |
 | BusinessRuleViolationException | 422 Unprocessable Entity |
-| IllegalArgumentException | 400 Bad Request |
+| IllegalArgumentException / violações Bean Validation | 400 Bad Request |
 | Exception | 500 Internal Server Error |
 
-Essa conversão será realizada por um componente específico da infraestrutura.
+O corpo da resposta seguirá `ProblemDetail` (campos como `type`, `title`, `status`, `detail` e extensões quando necessário). A conversão será realizada por um `@RestControllerAdvice` na infraestrutura.
 
 ---
 
 # 10. Estratégia de Logging
 
-As exceções serão registradas de acordo com sua natureza.
+As exceções serão registradas via **SLF4J**, de acordo com sua natureza.
 
 ## Erros de negócio
 
@@ -270,11 +270,11 @@ Preserva a independência do domínio.
 
 ### Decisão
 
-A tradução entre exceções e respostas HTTP ocorrerá exclusivamente na camada de infraestrutura.
+A tradução entre exceções e respostas HTTP ocorrerá exclusivamente na camada de infraestrutura, usando **RFC 7807 `ProblemDetail`**.
 
 ### Justificativa
 
-Mantém separadas as responsabilidades entre domínio e apresentação.
+Mantém separadas as responsabilidades entre domínio e apresentação e padroniza o contrato de erro da API.
 
 ---
 

@@ -37,8 +37,8 @@ Na raiz do repositório, o ambiente local é orquestrado pelo Docker Compose (MV
 ```text
 .
 ├── docker-compose.yml
-├── Dockerfile              # imagem do backend
-├── frontend/               # módulo frontend (a especificar) + Dockerfile
+├── Dockerfile              # multi-stage Maven → eclipse-temurin:21-jre
+├── frontend/               # módulo frontend (a especificar) + Dockerfile; porta 4200
 ├── docs/
 └── src
     ├── main
@@ -53,11 +53,18 @@ Na raiz do repositório, o ambiente local é orquestrado pelo Docker Compose (MV
     │   │       └── shared
     │   │
     │   └── resources
+    │       ├── application.yml
+    │       ├── application-dev.yml
+    │       ├── application-test.yml
+    │       ├── application-prod.yml
+    │       └── db/migration/      # scripts Flyway
     │
     └── test
 ```
 
-Serviços previstos no Compose: `db` (PostgreSQL), `backend` (Spring Boot) e `frontend`. O comando padrão de execução local é `docker compose up`.
+Serviços previstos no Compose: `db` (PostgreSQL **18**), `backend` (Spring Boot **3.5.16**) e `frontend` (porta **4200**). O comando padrão de execução local é `docker compose up`.
+
+Credenciais locais do banco: database `ebm-edu`, usuário `admin`, senha `admin@123` (via Compose / `.env`; em `prod` preferir variáveis de ambiente).
 
 ---
 
@@ -153,10 +160,10 @@ infrastructure
 persistence
 
 ├── repository
-└── migration
+└── configuration
 ```
 
-Responsável pela persistência dos dados.
+Responsável pela persistência dos dados. Scripts **Flyway** ficam em `src/main/resources/db/migration`.
 
 ---
 
@@ -174,7 +181,7 @@ web
 └── exception
 ```
 
-Responsável pela API REST.
+Responsável pela API REST (inclui `@RestControllerAdvice` com `ProblemDetail` e configuração de CORS no MVP).
 
 ---
 
@@ -184,7 +191,7 @@ Responsável pela API REST.
 configuration
 ```
 
-Responsável pelas configurações do Spring.
+Responsável pelas configurações do Spring (`application.yml`, profiles `dev` / `test` / `prod`, CORS, springdoc).
 
 ---
 
@@ -194,7 +201,7 @@ Responsável pelas configurações do Spring.
 event
 ```
 
-Responsável pelos listeners dos Domain Events.
+Responsável pelos listeners dos Domain Events (`@TransactionalEventListener(AFTER_COMMIT)`).
 
 ---
 
@@ -250,7 +257,7 @@ br.com.academico
 ├── infrastructure
 │   ├── persistence
 │   │   ├── repository
-│   │   └── migration
+│   │   └── configuration
 │   │
 │   ├── web
 │   │   ├── controller
@@ -267,6 +274,8 @@ br.com.academico
     ├── validation
     └── configuration
 ```
+
+Recursos Spring (`src/main/resources`): `application.yml`, `application-{dev|test|prod}.yml` e `db/migration/` (Flyway).
 
 ---
 
