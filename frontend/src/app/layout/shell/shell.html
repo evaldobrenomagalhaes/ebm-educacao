@@ -1,0 +1,44 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    class="shell__sidenav"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+    [fixedInViewport]="(isHandset$ | async) === true"
+    #drawer
+  >
+    <div class="shell__brand">
+      <span class="shell__brand-mark">EBM</span>
+      <span class="shell__brand-name">EBM Edu</span>
+    </div>
+
+    <mat-nav-list class="shell__nav">
+      @for (item of navItems; track item.path) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          routerLinkActive="shell__nav-item--active"
+          [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+          (click)="closeIfHandset(drawer)"
+        >
+          <mat-icon matListItemIcon aria-hidden="true">{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="shell__content">
+    <mat-toolbar class="shell__toolbar">
+      @if (isHandset$ | async) {
+        <button mat-icon-button type="button" aria-label="Abrir menu" (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="shell__toolbar-title">Sistema Acadêmico</span>
+    </mat-toolbar>
+
+    <main class="shell__main">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

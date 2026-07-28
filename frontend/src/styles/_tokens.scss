@@ -1,0 +1,29 @@
+:root {
+  --ebm-primary: #e65100;
+  --ebm-on-primary: #ffffff;
+  --ebm-sidebar-bg: #1c1c1e;
+  --ebm-sidebar-text: rgba(255, 255, 255, 0.82);
+  --ebm-sidebar-text-muted: rgba(255, 255, 255, 0.55);
+  --ebm-sidebar-active: var(--ebm-primary);
+  --ebm-surface: #f7f7f5;
+  --ebm-on-surface: #212121;
+  --ebm-content-max-width: 1200px;
+  --ebm-motion-fast: 150ms;
+  --ebm-motion-normal: 250ms;
+  --ebm-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ebm-motion-fast: 0ms;
+    --ebm-motion-normal: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

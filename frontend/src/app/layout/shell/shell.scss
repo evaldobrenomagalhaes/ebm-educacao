@@ -1,0 +1,91 @@
+.shell {
+  height: 100vh;
+  background: var(--ebm-surface);
+}
+
+.shell__sidenav {
+  width: 260px;
+  background: var(--ebm-sidebar-bg);
+  color: var(--ebm-sidebar-text);
+  border-right: none;
+}
+
+.shell__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+}
+
+.shell__brand-mark {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ebm-sidebar-text-muted);
+}
+
+.shell__brand-name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.shell__nav {
+  padding-top: 0.5rem;
+}
+
+.shell__sidenav a.mat-mdc-list-item {
+  color: var(--ebm-sidebar-text);
+  margin: 0.15rem 0.5rem;
+  border-radius: 8px;
+  transition:
+    background-color var(--ebm-motion-fast) var(--ebm-motion-easing),
+    color var(--ebm-motion-fast) var(--ebm-motion-easing);
+}
+
+.shell__sidenav a.mat-mdc-list-item .mat-icon {
+  color: var(--ebm-sidebar-text-muted);
+}
+
+.shell__nav-item--active {
+  background: rgba(230, 81, 0, 0.18) !important;
+  color: #fff !important;
+  position: relative;
+}
+
+.shell__nav-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--ebm-sidebar-active);
+}
+
+.shell__nav-item--active .mat-icon {
+  color: var(--ebm-sidebar-active) !important;
+}
+
+.shell__toolbar {
+  background: transparent;
+  color: var(--ebm-on-surface);
+  padding-inline: 0.5rem 1rem;
+}
+
+.shell__toolbar-title {
+  margin-left: 0.25rem;
+  font: var(--mat-sys-title-medium);
+}
+
+.shell__main {
+  padding: 1rem 1.25rem 2rem;
+}
+
+@media (min-width: 960px) {
+  .shell__main {
+    padding: 1.5rem 2rem 2.5rem;
+  }
+}

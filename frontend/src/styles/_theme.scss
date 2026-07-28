@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+@use './theme-colors' as ebm;
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: ebm.$primary-palette,
+        tertiary: ebm.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
