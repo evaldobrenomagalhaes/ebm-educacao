@@ -262,6 +262,8 @@ Essa separação evita dependências implícitas entre componentes.
 
 Os Eventos de Domínio somente serão publicados após a conclusão da transação responsável pela alteração do domínio.
 
+Na implementação, a publicação usará `ApplicationEventPublisher` e os consumidores serão anotados com `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`.
+
 ### Justificativa
 
 Evita a publicação de eventos referentes a operações que não foram efetivamente persistidas.
