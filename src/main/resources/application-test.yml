@@ -1,5 +1,6 @@
 spring:
   datasource:
+    # Sobrescrito por Testcontainers em AbstractIntegrationTest (@DynamicPropertySource).
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ebm-edu}
     username: ${SPRING_DATASOURCE_USERNAME:admin}
     password: ${SPRING_DATASOURCE_PASSWORD:admin@123}
