@@ -34,6 +34,9 @@ class QueriesCoverageTest {
         BuscarTurmaPorIdQuery buscarTurma = new BuscarTurmaPorIdQuery(id);
         assertThat(buscarTurma.id()).isEqualTo(id);
 
+        BuscarMatriculaPorIdQuery buscarMatricula = new BuscarMatriculaPorIdQuery(id);
+        assertThat(buscarMatricula.id()).isEqualTo(id);
+
         ListarAlunosQuery listarAlunos = new ListarAlunosQuery("Ana", "ana@", SituacaoAcademica.ATIVO);
         assertThat(listarAlunos.nome()).isEqualTo("Ana");
         assertThat(ListarAlunosQuery.todos().nome()).isNull();
@@ -54,6 +57,11 @@ class QueriesCoverageTest {
         ListarTurmasQuery listarTurmas = new ListarTurmasQuery("T1", StatusTurma.ABERTA, id, id, true);
         assertThat(listarTurmas.comVagas()).isTrue();
         assertThat(ListarTurmasQuery.todos().status()).isNull();
+
+        ListarMatriculasQuery listarMatriculas = new ListarMatriculasQuery(
+                StatusMatricula.PENDENTE, id, id, id, id);
+        assertThat(listarMatriculas.alunoId()).isEqualTo(id);
+        assertThat(ListarMatriculasQuery.todas().status()).isNull();
 
         ConsultarMatriculasPorAlunoQuery porAluno = new ConsultarMatriculasPorAlunoQuery(
                 id, StatusMatricula.PENDENTE, id, id);

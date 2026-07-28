@@ -9,6 +9,7 @@ import br.com.academico.application.usecase.AtualizarTurmaUseCase;
 import br.com.academico.application.usecase.BuscarAlunoPorIdUseCase;
 import br.com.academico.application.usecase.BuscarCursoPorIdUseCase;
 import br.com.academico.application.usecase.BuscarDisciplinaPorIdUseCase;
+import br.com.academico.application.usecase.BuscarMatriculaPorIdUseCase;
 import br.com.academico.application.usecase.BuscarPeriodoLetivoPorIdUseCase;
 import br.com.academico.application.usecase.BuscarTurmaPorIdUseCase;
 import br.com.academico.application.usecase.CadastrarAlunoUseCase;
@@ -30,6 +31,7 @@ import br.com.academico.application.usecase.FecharTurmaUseCase;
 import br.com.academico.application.usecase.ListarAlunosUseCase;
 import br.com.academico.application.usecase.ListarCursosUseCase;
 import br.com.academico.application.usecase.ListarDisciplinasUseCase;
+import br.com.academico.application.usecase.ListarMatriculasUseCase;
 import br.com.academico.application.usecase.ListarPeriodosLetivosUseCase;
 import br.com.academico.application.usecase.ListarTurmasUseCase;
 import br.com.academico.application.usecase.RealizarMatriculaUseCase;
@@ -251,6 +253,19 @@ public class UseCaseConfiguration {
             ListarTurmasUseCase listarTurmasUseCase
     ) {
         return new ConsultarTurmasDisponiveisUseCase(listarTurmasUseCase);
+    }
+
+    @Bean
+    public ListarMatriculasUseCase listarMatriculasUseCase(
+            MatriculaRepository matriculaRepository,
+            TurmaRepository turmaRepository
+    ) {
+        return new ListarMatriculasUseCase(matriculaRepository, turmaRepository);
+    }
+
+    @Bean
+    public BuscarMatriculaPorIdUseCase buscarMatriculaPorIdUseCase(MatriculaRepository matriculaRepository) {
+        return new BuscarMatriculaPorIdUseCase(matriculaRepository);
     }
 
     @Bean
