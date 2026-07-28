@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.AlunoDto;
 import br.com.academico.application.query.BuscarAlunoPorIdQuery;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -8,7 +10,8 @@ import br.com.academico.domain.valueobject.AlunoId;
 
 import java.util.Objects;
 
-public final class BuscarAlunoPorIdUseCase {
+@Transactional(readOnly = true)
+public class BuscarAlunoPorIdUseCase {
 
     private final AlunoRepository alunoRepository;
 

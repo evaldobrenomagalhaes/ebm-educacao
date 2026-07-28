@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.CadastrarCursoCommand;
 import br.com.academico.application.dto.CursoDto;
 import br.com.academico.domain.model.Curso;
@@ -7,7 +9,8 @@ import br.com.academico.domain.repository.CursoRepository;
 
 import java.util.Objects;
 
-public final class CadastrarCursoUseCase {
+@Transactional
+public class CadastrarCursoUseCase {
 
     private final CursoRepository cursoRepository;
 

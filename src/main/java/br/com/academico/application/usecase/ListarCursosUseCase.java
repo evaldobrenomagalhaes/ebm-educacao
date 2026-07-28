@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.CursoDto;
 import br.com.academico.application.query.ListarCursosQuery;
 import br.com.academico.domain.model.Curso;
@@ -8,7 +10,8 @@ import br.com.academico.domain.repository.CursoRepository;
 import java.util.List;
 import java.util.Objects;
 
-public final class ListarCursosUseCase {
+@Transactional(readOnly = true)
+public class ListarCursosUseCase {
 
     private final CursoRepository cursoRepository;
 

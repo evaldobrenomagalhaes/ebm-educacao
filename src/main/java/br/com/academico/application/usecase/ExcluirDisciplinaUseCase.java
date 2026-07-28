@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.ExcluirDisciplinaCommand;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.repository.DisciplinaRepository;
@@ -7,7 +9,8 @@ import br.com.academico.domain.valueobject.DisciplinaId;
 
 import java.util.Objects;
 
-public final class ExcluirDisciplinaUseCase {
+@Transactional
+public class ExcluirDisciplinaUseCase {
 
     private final DisciplinaRepository disciplinaRepository;
 

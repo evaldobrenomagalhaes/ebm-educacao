@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.AtualizarTurmaCommand;
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -15,7 +17,8 @@ import br.com.academico.domain.valueobject.TurmaId;
 
 import java.util.Objects;
 
-public final class AtualizarTurmaUseCase {
+@Transactional
+public class AtualizarTurmaUseCase {
 
     private final TurmaRepository turmaRepository;
     private final DisciplinaRepository disciplinaRepository;

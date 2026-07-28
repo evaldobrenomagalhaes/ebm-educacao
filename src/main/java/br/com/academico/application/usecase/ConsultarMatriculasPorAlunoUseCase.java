@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.application.query.ConsultarMatriculasPorAlunoQuery;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -17,7 +19,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class ConsultarMatriculasPorAlunoUseCase {
+@Transactional(readOnly = true)
+public class ConsultarMatriculasPorAlunoUseCase {
 
     private final MatriculaRepository matriculaRepository;
     private final AlunoRepository alunoRepository;

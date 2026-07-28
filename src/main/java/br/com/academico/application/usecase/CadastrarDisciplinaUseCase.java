@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.CadastrarDisciplinaCommand;
 import br.com.academico.application.dto.DisciplinaDto;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -10,7 +12,8 @@ import br.com.academico.domain.valueobject.CursoId;
 
 import java.util.Objects;
 
-public final class CadastrarDisciplinaUseCase {
+@Transactional
+public class CadastrarDisciplinaUseCase {
 
     private final DisciplinaRepository disciplinaRepository;
     private final CursoRepository cursoRepository;

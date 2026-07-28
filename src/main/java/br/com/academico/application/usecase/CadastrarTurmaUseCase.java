@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.CadastrarTurmaCommand;
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -14,7 +16,8 @@ import br.com.academico.domain.valueobject.PeriodoLetivoId;
 
 import java.util.Objects;
 
-public final class CadastrarTurmaUseCase {
+@Transactional
+public class CadastrarTurmaUseCase {
 
     private final TurmaRepository turmaRepository;
     private final DisciplinaRepository disciplinaRepository;

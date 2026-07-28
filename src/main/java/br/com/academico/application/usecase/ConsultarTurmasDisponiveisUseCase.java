@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.application.query.ConsultarTurmasDisponiveisQuery;
 import br.com.academico.application.query.ListarTurmasQuery;
@@ -11,7 +13,8 @@ import java.util.Objects;
 /**
  * Atalho semântico sobre {@link ListarTurmasUseCase}: status ABERTA e com vagas (doc 09 §4.3).
  */
-public final class ConsultarTurmasDisponiveisUseCase {
+@Transactional(readOnly = true)
+public class ConsultarTurmasDisponiveisUseCase {
 
     private final ListarTurmasUseCase listarTurmasUseCase;
 

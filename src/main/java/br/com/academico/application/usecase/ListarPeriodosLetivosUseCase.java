@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.PeriodoLetivoDto;
 import br.com.academico.application.query.ListarPeriodosLetivosQuery;
 import br.com.academico.domain.model.PeriodoLetivo;
@@ -9,7 +11,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-public final class ListarPeriodosLetivosUseCase {
+@Transactional(readOnly = true)
+public class ListarPeriodosLetivosUseCase {
 
     private final PeriodoLetivoRepository periodoLetivoRepository;
 

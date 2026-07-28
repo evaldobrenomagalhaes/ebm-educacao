@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.RealizarMatriculaCommand;
 import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.domain.exception.DuplicateMatriculaException;
@@ -14,7 +16,8 @@ import br.com.academico.domain.valueobject.TurmaId;
 
 import java.util.Objects;
 
-public final class RealizarMatriculaUseCase {
+@Transactional
+public class RealizarMatriculaUseCase {
 
     private final MatriculaRepository matriculaRepository;
     private final AlunoRepository alunoRepository;

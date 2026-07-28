@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.ExcluirTurmaCommand;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.repository.TurmaRepository;
@@ -7,7 +9,8 @@ import br.com.academico.domain.valueobject.TurmaId;
 
 import java.util.Objects;
 
-public final class ExcluirTurmaUseCase {
+@Transactional
+public class ExcluirTurmaUseCase {
 
     private final TurmaRepository turmaRepository;
 

@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.ExcluirPeriodoLetivoCommand;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.repository.PeriodoLetivoRepository;
@@ -7,7 +9,8 @@ import br.com.academico.domain.valueobject.PeriodoLetivoId;
 
 import java.util.Objects;
 
-public final class ExcluirPeriodoLetivoUseCase {
+@Transactional
+public class ExcluirPeriodoLetivoUseCase {
 
     private final PeriodoLetivoRepository periodoLetivoRepository;
 

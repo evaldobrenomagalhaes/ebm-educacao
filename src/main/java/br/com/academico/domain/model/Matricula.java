@@ -16,6 +16,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.util.Objects;
 
@@ -25,7 +26,13 @@ import java.util.Objects;
  * Transições: PENDENTE → CONFIRMADA → CANCELADA (estado final, PA-04).
  */
 @Entity
-@Table(name = "LY_MATRICULA")
+@Table(
+        name = "LY_MATRICULA",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_matricula_aluno_turma",
+                columnNames = {"aluno_id", "turma_id"}
+        )
+)
 public class Matricula extends AggregateRoot {
 
     @EmbeddedId

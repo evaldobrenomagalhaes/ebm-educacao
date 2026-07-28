@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.application.query.ListarTurmasQuery;
 import br.com.academico.domain.model.Turma;
@@ -8,7 +10,8 @@ import br.com.academico.domain.repository.TurmaRepository;
 import java.util.List;
 import java.util.Objects;
 
-public final class ListarTurmasUseCase {
+@Transactional(readOnly = true)
+public class ListarTurmasUseCase {
 
     private final TurmaRepository turmaRepository;
 

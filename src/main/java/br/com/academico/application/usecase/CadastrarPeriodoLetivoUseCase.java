@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.CadastrarPeriodoLetivoCommand;
 import br.com.academico.application.dto.PeriodoLetivoDto;
 import br.com.academico.domain.model.PeriodoLetivo;
@@ -7,7 +9,8 @@ import br.com.academico.domain.repository.PeriodoLetivoRepository;
 
 import java.util.Objects;
 
-public final class CadastrarPeriodoLetivoUseCase {
+@Transactional
+public class CadastrarPeriodoLetivoUseCase {
 
     private final PeriodoLetivoRepository periodoLetivoRepository;
 

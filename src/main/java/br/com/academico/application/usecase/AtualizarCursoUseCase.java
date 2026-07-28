@@ -1,5 +1,7 @@
 package br.com.academico.application.usecase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.academico.application.command.AtualizarCursoCommand;
 import br.com.academico.application.dto.CursoDto;
 import br.com.academico.domain.exception.EntityNotFoundException;
@@ -9,7 +11,8 @@ import br.com.academico.domain.valueobject.CursoId;
 
 import java.util.Objects;
 
-public final class AtualizarCursoUseCase {
+@Transactional
+public class AtualizarCursoUseCase {
 
     private final CursoRepository cursoRepository;
 
