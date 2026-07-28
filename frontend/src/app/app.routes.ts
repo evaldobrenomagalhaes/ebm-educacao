@@ -13,5 +13,10 @@ export const routes: Routes = [
     path: 'disciplinas',
     loadChildren: () => import('./features/disciplina/disciplina.routes').then((m) => m.disciplinaRoutes),
   },
+  {
+    path: 'periodos-letivos',
+    loadChildren: () =>
+      import('./features/periodo-letivo/periodo-letivo.routes').then((m) => m.periodoLetivoRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];

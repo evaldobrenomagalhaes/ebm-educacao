@@ -1,0 +1,70 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Período letivo não encontrado."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/periodos-letivos'])"
+    />
+  } @else {
+    <header class="page__header">
+      <h1 class="page__title">{{ isEdit() ? 'Editar período letivo' : 'Novo período letivo' }}</h1>
+      <div class="page__actions">
+        <a mat-button routerLink="/periodos-letivos">Cancelar</a>
+      </div>
+    </header>
+
+    <form class="form-grid form-grid--two" [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline">
+        <mat-label>Código</mat-label>
+        <input matInput formControlName="codigo" />
+        @if (form.controls.codigo.hasError('required')) {
+          <mat-error>Informe o código</mat-error>
+        } @else if (form.controls.codigo.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="situacao">
+          <mat-option value="ABERTO">Aberto</mat-option>
+          <mat-option value="ENCERRADO">Encerrado</mat-option>
+        </mat-select>
+        @if (form.controls.situacao.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data início</mat-label>
+        <input matInput type="date" formControlName="dataInicio" />
+        @if (form.controls.dataInicio.hasError('required')) {
+          <mat-error>Informe a data de início</mat-error>
+        } @else if (form.controls.dataInicio.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data término</mat-label>
+        <input matInput type="date" formControlName="dataTermino" />
+        @if (form.controls.dataTermino.hasError('required')) {
+          <mat-error>Informe a data de término</mat-error>
+        } @else if (form.controls.dataTermino.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="page__actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Salvando…' : 'Salvar' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

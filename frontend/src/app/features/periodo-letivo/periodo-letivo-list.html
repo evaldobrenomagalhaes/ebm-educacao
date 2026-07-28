@@ -1,0 +1,111 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Períodos Letivos</h1>
+    <div class="page__actions">
+      <a mat-flat-button color="primary" routerLink="/periodos-letivos/novo">
+        <mat-icon>add</mat-icon>
+        Novo período
+      </a>
+    </div>
+  </header>
+
+  <form class="filters" [formGroup]="filterForm" (ngSubmit)="filtrar()">
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Situação</mat-label>
+      <mat-select formControlName="situacao">
+        <mat-option value="">Todas</mat-option>
+        <mat-option value="ABERTO">Aberto</mat-option>
+        <mat-option value="ENCERRADO">Encerrado</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Vigente em</mat-label>
+      <input matInput type="date" formControlName="vigenteEm" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Início de</mat-label>
+      <input matInput type="date" formControlName="dataInicioDe" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Início até</mat-label>
+      <input matInput type="date" formControlName="dataInicioAte" />
+    </mat-form-field>
+
+    <div class="filters__actions">
+      <button mat-flat-button color="primary" type="submit">Filtrar</button>
+      <button mat-stroked-button type="button" (click)="limpar()">Limpar</button>
+    </div>
+  </form>
+
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando períodos letivos…</span>
+    </div>
+  } @else if (error()) {
+    <div class="state-block">
+      <p>{{ error() }}</p>
+      <button mat-stroked-button type="button" (click)="load()">Tentar novamente</button>
+    </div>
+  } @else if (items().length === 0) {
+    <app-empty-state
+      message="Nenhum período letivo encontrado."
+      actionLabel="Novo período"
+      (action)="router.navigate(['/periodos-letivos', 'novo'])"
+    />
+  } @else {
+    <div class="table-wrap">
+      <table mat-table [dataSource]="items()" class="mat-elevation-z0">
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataInicio">
+          <th mat-header-cell *matHeaderCellDef>Início</th>
+          <td mat-cell *matCellDef="let row">{{ row.dataInicio }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataTermino">
+          <th mat-header-cell *matHeaderCellDef>Término</th>
+          <td mat-cell *matCellDef="let row">{{ row.dataTermino }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="situacao">
+          <th mat-header-cell *matHeaderCellDef>Situação</th>
+          <td mat-cell *matCellDef="let row">
+            <app-status-chip
+              [label]="Labels.situacaoPeriodo(row.situacao)"
+              [highlighted]="row.situacao === 'ABERTO'"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-button type="button" color="primary" (click)="$event.stopPropagation(); ver(row.id)">
+              Ver
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="ver(row.id)"
+          style="cursor: pointer"
+        ></tr>
+      </table>
+    </div>
+  }
+</section>
