@@ -1,0 +1,54 @@
+package br.com.academico.application.usecase;
+
+import br.com.academico.application.command.RealizarMatriculaCommand;
+import br.com.academico.application.dto.MatriculaDto;
+import br.com.academico.domain.exception.DuplicateMatriculaException;
+import br.com.academico.domain.exception.EntityNotFoundException;
+import br.com.academico.domain.model.Matricula;
+import br.com.academico.domain.model.Turma;
+import br.com.academico.domain.repository.AlunoRepository;
+import br.com.academico.domain.repository.MatriculaRepository;
+import br.com.academico.domain.repository.TurmaRepository;
+import br.com.academico.domain.valueobject.AlunoId;
+import br.com.academico.domain.valueobject.TurmaId;
+
+import java.util.Objects;
+
+public final class RealizarMatriculaUseCase {
+
+    private final MatriculaRepository matriculaRepository;
+    private final AlunoRepository alunoRepository;
+    private final TurmaRepository turmaRepository;
+
+    public RealizarMatriculaUseCase(
+            MatriculaRepository matriculaRepository,
+            AlunoRepository alunoRepository,
+            TurmaRepository turmaRepository
+    ) {
+        this.matriculaRepository = Objects.requireNonNull(matriculaRepository);
+        this.alunoRepository = Objects.requireNonNull(alunoRepository);
+        this.turmaRepository = Objects.requireNonNull(turmaRepository);
+    }
+
+    public MatriculaDto executar(RealizarMatriculaCommand command) {
+        Objects.requireNonNull(command, "Command é obrigatório");
+        AlunoId alunoId = AlunoId.de(command.alunoId());
+        TurmaId turmaId = TurmaId.de(command.turmaId());
+
+        if (alunoRepository.buscarPorId(alunoId).isEmpty()) {
+            throw EntityNotFoundException.of("Aluno", command.alunoId());
+        }
+
+        Turma turma = turmaRepository.buscarPorId(turmaId)
+                .orElseThrow(() -> EntityNotFoundException.of("Turma", command.turmaId()));
+        turma.garantirAbertaParaMatricula();
+
+        if (matriculaRepository.existePorAlunoETurma(alunoId, turmaId)) {
+            throw DuplicateMatriculaException.alunoNaTurma();
+        }
+
+        Matricula matricula = Matricula.realizar(alunoId, turmaId);
+        matriculaRepository.salvar(matricula);
+        return MatriculaDto.from(matricula);
+    }
+}
