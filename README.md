@@ -21,6 +21,8 @@ docker compose up
 
 API em `http://localhost:8080` · Swagger em `http://localhost:8080/swagger-ui.html` · Frontend (Angular/nginx) em `http://localhost:4200`.
 
+No profile `dev`, o Flyway aplica também a carga de cenários de teste (`db/testdata`). Roteiro completo: [docs/30 - Roteiro de Testes Manuais.md](docs/30%20-%20Roteiro%20de%20Testes%20Manuais.md).
+
 Backend com Maven (banco via Compose):
 
 ```bash

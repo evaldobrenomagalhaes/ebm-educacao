@@ -364,6 +364,10 @@ SPA em **Angular** (TypeScript) no módulo `frontend/`, alinhada aos [Documentos
 
 # Como Testar Manualmente o Fluxo de Matrícula
 
+Com o profile **`dev`**, o Flyway aplica o schema e a carga de cenários em `db/testdata` (UUIDs fixos). Roteiro completo: [Documento 30 — Roteiro de Testes Manuais](30%20-%20Roteiro%20de%20Testes%20Manuais.md).
+
+Fluxo mínimo **sem** depender do seed (cadastro do zero):
+
 1. Cadastre um **Curso** e uma **Disciplina**.
 2. Cadastre um **Período Letivo** (ex.: `2026.1`).
 3. Cadastre uma **Turma** vinculada à disciplina/período, com limite de vagas (ex.: `2`) e status **aberta**.
@@ -502,8 +506,9 @@ Toda a modelagem arquitetural encontra-se em `docs/`. Índice alinhado aos arqui
 | 27 | [27 - Comunicação com a API.md](27%20-%20Comunicação%20com%20a%20API.md) | Comunicação com a API |
 | 28 | [28 - Componentização e Estrutura do Projeto.md](28%20-%20Componentização%20e%20Estrutura%20do%20Projeto.md) | Componentização e estrutura do frontend |
 | 29 | [29 - Testes e Roadmap do Frontend.md](29%20-%20Testes%20e%20Roadmap%20do%20Frontend.md) | Testes e roadmap do frontend |
+| 30 | [30 - Roteiro de Testes Manuais.md](30%20-%20Roteiro%20de%20Testes%20Manuais.md) | Roteiro manual + catálogo do seed Flyway (`dev`) |
 
-> Não há Documento 12 numerado no conjunto atual; o arquivo de repositórios é o Documento 11. A série de frontend é os Documentos 23–29.
+> Não há Documento 12 numerado no conjunto atual; o arquivo de repositórios é o Documento 11. A série de frontend é os Documentos 23–29; o Documento 30 cobre QA manual com a carga `db/testdata`.
 
 ---
 

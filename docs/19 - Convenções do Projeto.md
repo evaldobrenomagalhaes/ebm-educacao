@@ -278,8 +278,12 @@ src/main/resources/
 ├── application-dev.yml
 ├── application-test.yml
 ├── application-prod.yml
-└── db/migration/
+└── db/
+    ├── migration/    # Schema versionado (todos os profiles)
+    └── testdata/     # Carga de cenários (somente profile dev)
 ```
+
+No profile `dev`, `spring.flyway.locations` inclui `classpath:db/migration` e `classpath:db/testdata` (seed `V1000__…` com UUIDs fixos para o Documento 30). Profiles `test` e `prod` usam apenas `db/migration`.
 
 Credenciais locais de referência (apenas `dev` / Compose): database `ebm-edu`, usuário `admin`, senha `admin@123`.
 
