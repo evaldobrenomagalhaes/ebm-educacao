@@ -1,0 +1,33 @@
+---
+description: Camadas hexagonais, direção de dependências e pacotes (ADR-001)
+globs: "**/*.java"
+alwaysApply: false
+---
+
+# Arquitetura por camadas
+
+Dependências: `infrastructure` → `application` → `domain`. O domínio não depende de outras camadas.
+
+```text
+br.com.academico
+├── domain/{model,valueobject,event,repository,service,exception}
+├── application/{usecase,command,query,dto}
+├── infrastructure/{persistence,web,configuration,event,security}
+└── shared/{util,validation,configuration}
+```
+
+Organização **por camada** (ADR-001). Um único `domain/model` — sem subdividir por feature (`aluno`, `turma`) neste estágio.
+
+## O que cada camada pode
+
+| Camada | Pode | Não pode |
+|--------|------|----------|
+| Domain | Regras, Aggregates, VOs, ports, eventos, exceções | Controllers, HTTP, Spring Data APIs, SQL |
+| Application | Orquestrar use cases; usar ports do domínio | Regras de negócio; Hibernate; Controllers |
+| Infrastructure | Adapters JPA, REST, config, listeners | Regras de negócio no controller/repo |
+
+## Exceção controlada (DA-011)
+
+Entidades em `domain/model` **podem** ter anotações JPA de mapeamento. Isso não autoriza `EntityManager`, Spring Data ou SQL no domínio — persistência só via ports em `domain/repository`, implementadas em `infrastructure/persistence`.
+
+Detalhes: docs 10, 16, 22.

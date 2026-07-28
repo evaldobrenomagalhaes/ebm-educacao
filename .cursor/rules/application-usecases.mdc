@@ -1,0 +1,33 @@
+---
+description: Casos de uso — orquestração sem regras de negócio
+globs: "**/application/**/*.java"
+alwaysApply: false
+---
+
+# Casos de uso (doc 09)
+
+Use cases em `application/usecase` **coordenam**; não implementam regras de negócio (MD-014).
+
+## Fluxo típico
+
+1. Receber Command / Query  
+2. Carregar Aggregates via ports  
+3. Invocar comportamento do domínio  
+4. Persistir via repository  
+5. Publicar eventos após persistência/commit  
+6. Retornar DTO / resultado  
+
+## Pode / não pode
+
+| Pode | Não pode |
+|------|----------|
+| Orquestrar fluxo | Setters / alterar estado direto |
+| Validar entrada técnica | Validar invariantes do domínio |
+| Depender de ports do domínio | Depender de Hibernate, Controllers, HTTP |
+| Propagar `DomainException` | Engolir regras com `if` no use case |
+
+## Nomeação
+
+Alinhar ao inventário do doc 09: `CadastrarAluno`, `RealizarMatricula`, `ConfirmarMatricula`, `ListarTurmas`, `ConsultarTurmasDisponiveis`, etc. Sufixo `UseCase` nas classes.
+
+Commands / Queries / DTOs: preferir `record` (doc 19). Filtros de listagem são opcionais no MVP; paginação é evolução (doc 21).

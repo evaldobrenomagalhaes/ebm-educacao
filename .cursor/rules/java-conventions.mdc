@@ -1,0 +1,35 @@
+---
+description: Convenções Java 21 — nomes, Optional, imutabilidade, estilo
+globs: "**/*.java"
+alwaysApply: false
+---
+
+# Convenções Java (doc 19)
+
+## Nomeação
+
+- Classes: PascalCase (`ConfirmarMatriculaUseCase`, `TurmaRepository`)
+- Interfaces: **sem** prefixo `I`
+- Métodos/variáveis: camelCase expressivo (`confirmarMatricula`, `quantidadeVagas`)
+- Constantes: `UPPER_SNAKE`
+
+## Estilo
+
+- Métodos curtos (~30 linhas), uma responsabilidade
+- Preferir imutabilidade (`final`, VOs imutáveis, `List.of` / `Set.of` quando apropriado)
+- `Optional` **somente** como retorno — nunca atributo, parâmetro ou campo JPA (DA-039)
+- Exceções para situações excepcionais, não para controle de fluxo
+- Comentários só para decisão/regra não óbvia
+
+## Java 21 (DA-050)
+
+Preferir quando aumentar clareza:
+
+- `record` para DTOs, Commands e Responses
+- `sealed` quando a hierarquia for fechada
+- `switch` com pattern matching
+- `var` só se o tipo for evidente
+
+## Commits
+
+Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`.

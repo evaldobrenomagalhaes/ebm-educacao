@@ -1,0 +1,25 @@
+---
+description: Contexto do Sistema Acadêmico — stack, docs e pacote raiz
+alwaysApply: true
+---
+
+# Sistema Acadêmico
+
+API REST em **Java 21** + **Spring Boot 3** + **PostgreSQL**, com DDD e Arquitetura Hexagonal. Pacote raiz: `br.com.academico`.
+
+## Fonte da verdade
+
+A documentação aprovada em `docs/` prevalece sobre inferências. Consulte antes de modelar ou alterar comportamento:
+
+| Área | Documento |
+|------|-----------|
+| Princípios | 01, 02 |
+| Domínio | 03–08 |
+| Casos de uso | 09 |
+| Arquitetura / pacotes | 10, 16, 22 (ADR-001) |
+| Ports / JPA | 11, 13 |
+| Exceções | 14 |
+| Testes / qualidade | 15, 18 |
+| Convenções | 19 |
+
+Não invente entidades, casos de uso ou invariantes fora do que está documentado no MVP (Documento 21, §3).

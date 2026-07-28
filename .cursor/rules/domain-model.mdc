@@ -1,0 +1,35 @@
+---
+description: Modelo rico — Aggregates, VOs, invariantes e eventos de domínio
+globs: "**/domain/**/*.java"
+alwaysApply: false
+---
+
+# Modelo de domínio rico
+
+Regras de negócio vivem nas entidades/Aggregates — não em use cases, controllers ou repositórios (PA-01–PA-04).
+
+## Aggregates (doc 07)
+
+| Aggregate Root | Responsabilidade |
+|----------------|------------------|
+| `Turma` | Capacidade, vagas, disponibilidade (abrir/fechar) |
+| `Matricula` | Ciclo de vida e status da matrícula |
+
+Modificações internas passam pelo Aggregate Root. Persistência e carregamento ocorrem **por Aggregate** (DA-014).
+
+## Value Objects (doc 05)
+
+Imutáveis, igualdade por valor, validação no construtor. Identificados: `Email`, status de matrícula, status de turma. Preferir VO a `String`/`enum` solto quando o conceito tiver regra.
+
+## Invariantes (doc 06)
+
+Nunca permitir estado inválido. Exemplos: vagas ≥ 0; vagas ≤ capacidade; sem matrícula duplicada aluno+turma; turma fechada não recebe matrícula. Violações → exceções de domínio (doc 14).
+
+## Encapsulamento
+
+- Sem setters públicos para regras de negócio — métodos expressivos (`confirmar`, `cancelar`, `abrir`, `fechar`).
+- Linguagem ubíqua (doc 02): `Matricula`, `PeriodoLetivo`, `Turma` — não sinônimos inventados.
+
+## Eventos (doc 08)
+
+Fatos no particípio: `MatriculaRealizada`, `MatriculaConfirmada`, `MatriculaCancelada`, `TurmaAberta`, `TurmaFechada`. Não usar `MatriculaCriada`. Eventos não executam regras; Aggregates sim. Publicação após commit (DA-015 / MD-016).

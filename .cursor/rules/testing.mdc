@@ -1,0 +1,28 @@
+---
+description: Estratégia de testes — pirâmide, domínio sem Spring
+globs: "**/src/test/**/*.java"
+alwaysApply: false
+---
+
+# Testes (doc 15)
+
+Pirâmide: muitos unitários → integração → poucos E2E.
+
+## Unitários
+
+- Entities, VOs, Domain Services, Use Cases
+- Rápidos, sem banco, **sem Spring Boot**, sem infraestrutura
+- Foco: invariantes, transições de estado, orquestração com ports mockados
+
+## Integração
+
+- Adapters de repositório + PostgreSQL (preferir Testcontainers)
+- Fluxos API quando necessário
+
+## Critérios
+
+- Preservar invariantes (doc 06)
+- Cobrir caminhos felizes e violações que lançam exceções de domínio
+- Nomear testes pela regra/comportamento de negócio (linguagem ubíqua)
+
+Stack: JUnit 5, Mockito, Testcontainers.

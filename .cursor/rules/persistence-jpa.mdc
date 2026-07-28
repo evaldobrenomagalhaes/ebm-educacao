@@ -1,0 +1,37 @@
+---
+description: Persistência JPA — entidades de domínio, ports e adapters
+globs: "**/domain/**/*.java,**/infrastructure/persistence/**/*.java"
+alwaysApply: false
+---
+
+# Persistência (docs 11, 13)
+
+## Decisões
+
+- **DA-011**: entidades de `domain/model` são as entidades JPA (`@Entity`, etc.)
+- **DA-012**: Casos de Uso acessam persistência só via ports `*Repository` do domínio
+- **DA-013**: sem camada Mapper domínio ↔ persistência
+- **DA-014**: Aggregate Roots persistidos integralmente
+
+## Ports (domínio)
+
+```java
+public interface TurmaRepository {
+    Optional<Turma> buscarPorId(TurmaId id);
+    void salvar(Turma turma);
+}
+```
+
+Sem tipos Spring Data / JPA na assinatura da port.
+
+## Adapters (infra)
+
+`JpaTurmaRepository` implementa a port e encapsula `JpaRepository` / Spring Data. Tipos Spring Data não vazam para application/domain.
+
+```text
+Use Case → TurmaRepository (port) → JpaTurmaRepository → Spring Data → DB
+```
+
+## Value Objects
+
+Mapear com `@Embeddable`, `AttributeConverter` ou equivalente JPA — mantendo imutabilidade e validação no VO.

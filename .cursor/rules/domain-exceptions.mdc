@@ -1,0 +1,33 @@
+---
+description: Exceções de domínio e tradução HTTP na infraestrutura
+globs: "**/domain/exception/**/*.java,**/infrastructure/web/**/*.java"
+alwaysApply: false
+---
+
+# Exceções (doc 14)
+
+## Hierarquia no domínio
+
+```text
+RuntimeException
+└── DomainException
+    ├── BusinessRuleViolationException
+    │   └── (SemVagas, DuplicateMatricula, TurmaEncerrada, PeriodoLetivoEncerrado, …)
+    └── EntityNotFoundException
+```
+
+- Domínio lança exceções com significado de negócio — sem HTTP/status/JSON
+- Aplicação propaga
+- Infra (`web/exception`) traduz para resposta HTTP via handler global
+
+## Exemplos documentados
+
+| Exceção | Situação |
+|---------|----------|
+| `EntityNotFoundException` | Entidade inexistente |
+| `DuplicateMatriculaException` | Matrícula duplicada |
+| `SemVagasException` | Sem vagas |
+| `TurmaEncerradaException` | Turma não aceita matrícula |
+| `PeriodoLetivoEncerradoException` | Período encerrado |
+
+Validação simples de entrada (formato, obrigatório técnico) → camada de aplicação/web, não `DomainException`.
