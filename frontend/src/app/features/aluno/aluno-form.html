@@ -1,0 +1,62 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Aluno não encontrado."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/alunos'])"
+    />
+  } @else {
+    <header class="page__header">
+      <h1 class="page__title">{{ isEdit() ? 'Editar aluno' : 'Novo aluno' }}</h1>
+      <div class="page__actions">
+        <a mat-button routerLink="/alunos">Cancelar</a>
+      </div>
+    </header>
+
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+        @if (form.controls.nome.hasError('required')) {
+          <mat-error>Informe o nome</mat-error>
+        } @else if (form.controls.nome.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (form.controls.email.hasError('required')) {
+          <mat-error>Informe o e-mail</mat-error>
+        } @else if (form.controls.email.hasError('email')) {
+          <mat-error>E-mail inválido</mat-error>
+        } @else if (form.controls.email.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Situação acadêmica</mat-label>
+        <mat-select formControlName="situacaoAcademica">
+          <mat-option value="ATIVO">Ativo</mat-option>
+          <mat-option value="INATIVO">Inativo</mat-option>
+        </mat-select>
+        @if (form.controls.situacaoAcademica.errors?.['api']; as msg) {
+          <mat-error>{{ msg }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="page__actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Salvando…' : 'Salvar' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

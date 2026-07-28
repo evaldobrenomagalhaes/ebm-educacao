@@ -18,5 +18,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/periodo-letivo/periodo-letivo.routes').then((m) => m.periodoLetivoRoutes),
   },
+  {
+    path: 'alunos',
+    loadChildren: () => import('./features/aluno/aluno.routes').then((m) => m.alunoRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];
