@@ -3,22 +3,26 @@ package br.com.academico.application.usecase;
 import br.com.academico.application.dto.AlunoDto;
 import br.com.academico.application.dto.CursoDto;
 import br.com.academico.application.dto.DisciplinaDto;
+import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.application.dto.PeriodoLetivoDto;
 import br.com.academico.application.dto.TurmaDto;
 import br.com.academico.application.query.BuscarAlunoPorIdQuery;
 import br.com.academico.application.query.BuscarCursoPorIdQuery;
 import br.com.academico.application.query.BuscarDisciplinaPorIdQuery;
+import br.com.academico.application.query.BuscarMatriculaPorIdQuery;
 import br.com.academico.application.query.BuscarPeriodoLetivoPorIdQuery;
 import br.com.academico.application.query.BuscarTurmaPorIdQuery;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.model.Aluno;
 import br.com.academico.domain.model.Curso;
 import br.com.academico.domain.model.Disciplina;
+import br.com.academico.domain.model.Matricula;
 import br.com.academico.domain.model.PeriodoLetivo;
 import br.com.academico.domain.model.Turma;
 import br.com.academico.domain.repository.AlunoRepository;
 import br.com.academico.domain.repository.CursoRepository;
 import br.com.academico.domain.repository.DisciplinaRepository;
+import br.com.academico.domain.repository.MatriculaRepository;
 import br.com.academico.domain.repository.PeriodoLetivoRepository;
 import br.com.academico.domain.repository.TurmaRepository;
 import br.com.academico.domain.valueobject.CursoId;
@@ -28,6 +32,7 @@ import br.com.academico.domain.valueobject.PeriodoLetivoId;
 import br.com.academico.domain.valueobject.SituacaoAcademica;
 import br.com.academico.domain.valueobject.SituacaoCurso;
 import br.com.academico.domain.valueobject.SituacaoPeriodoLetivo;
+import br.com.academico.domain.valueobject.StatusMatricula;
 import br.com.academico.domain.valueobject.StatusTurma;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,12 +62,15 @@ class BuscarUseCasesTest {
     private PeriodoLetivoRepository periodoLetivoRepository;
     @Mock
     private TurmaRepository turmaRepository;
+    @Mock
+    private MatriculaRepository matriculaRepository;
 
     private BuscarAlunoPorIdUseCase buscarAluno;
     private BuscarCursoPorIdUseCase buscarCurso;
     private BuscarDisciplinaPorIdUseCase buscarDisciplina;
     private BuscarPeriodoLetivoPorIdUseCase buscarPeriodo;
     private BuscarTurmaPorIdUseCase buscarTurma;
+    private BuscarMatriculaPorIdUseCase buscarMatricula;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +79,7 @@ class BuscarUseCasesTest {
         buscarDisciplina = new BuscarDisciplinaPorIdUseCase(disciplinaRepository);
         buscarPeriodo = new BuscarPeriodoLetivoPorIdUseCase(periodoLetivoRepository);
         buscarTurma = new BuscarTurmaPorIdUseCase(turmaRepository);
+        buscarMatricula = new BuscarMatriculaPorIdUseCase(matriculaRepository);
     }
 
     @Test
@@ -162,5 +171,27 @@ class BuscarUseCasesTest {
 
         assertThatThrownBy(() -> buscarTurma.executar(new BuscarTurmaPorIdQuery(UUID.randomUUID())))
                 .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void deveBuscarMatriculaPorId() {
+        Aluno aluno = Aluno.cadastrar("Ana", Email.de("ana@email.com"), SituacaoAcademica.ATIVO);
+        Turma turma = Turma.cadastrar("T1", DisciplinaId.novo(), PeriodoLetivoId.novo(), 30, StatusTurma.ABERTA);
+        Matricula matricula = Matricula.realizar(aluno.getId(), turma.getId());
+        when(matriculaRepository.buscarPorId(matricula.getId())).thenReturn(Optional.of(matricula));
+
+        MatriculaDto dto = buscarMatricula.executar(new BuscarMatriculaPorIdQuery(matricula.getId().valor()));
+
+        assertThat(dto.id()).isEqualTo(matricula.getId().valor());
+        assertThat(dto.status()).isEqualTo(StatusMatricula.PENDENTE);
+    }
+
+    @Test
+    void buscarMatriculaDeveFalharQuandoNaoExiste() {
+        when(matriculaRepository.buscarPorId(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> buscarMatricula.executar(new BuscarMatriculaPorIdQuery(UUID.randomUUID())))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Matrícula");
     }
 }

@@ -122,6 +122,37 @@ class MatriculaFlowIT extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.detail").value("Turma sem vagas disponíveis"));
     }
 
+    @Test
+    void deveListarEBuscarMatriculaPorId() throws Exception {
+        Catalogo catalogo = cadastrarCatalogo(5, StatusTurma.ABERTA);
+        AlunoResponse aluno = cadastrarAluno("Gisele Lista");
+        MatriculaResponse realizada = realizarMatricula(aluno.id(), catalogo.turmaId());
+
+        mockMvc.perform(get("/api/matriculas")
+                        .param("alunoId", aluno.id().toString())
+                        .param("turmaId", catalogo.turmaId().toString())
+                        .param("status", StatusMatricula.PENDENTE.name())
+                        .param("periodoLetivoId", catalogo.periodoLetivoId().toString())
+                        .param("disciplinaId", catalogo.disciplinaId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(realizada.id().toString()))
+                .andExpect(jsonPath("$[0].alunoId").value(aluno.id().toString()))
+                .andExpect(jsonPath("$[0].status").value(StatusMatricula.PENDENTE.name()));
+
+        mockMvc.perform(get("/api/matriculas/{id}", realizada.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(realizada.id().toString()))
+                .andExpect(jsonPath("$.turmaId").value(catalogo.turmaId().toString()))
+                .andExpect(jsonPath("$.status").value(StatusMatricula.PENDENTE.name()));
+    }
+
+    @Test
+    void buscarMatriculaPorIdDeveRetornar404QuandoNaoExiste() throws Exception {
+        mockMvc.perform(get("/api/matriculas/{id}", UUID.randomUUID()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Recurso não encontrado"));
+    }
+
     private Catalogo cadastrarCatalogo(int capacidadeMaxima, StatusTurma statusTurma) throws Exception {
         String sufixo = UUID.randomUUID().toString().substring(0, 8);
 
@@ -151,7 +182,7 @@ class MatriculaFlowIT extends AbstractIntegrationTest {
                 "status", statusTurma
         ), TurmaResponse.class);
 
-        return new Catalogo(turma.id());
+        return new Catalogo(turma.id(), disciplina.id(), periodo.id());
     }
 
     private AlunoResponse cadastrarAluno(String nome) throws Exception {
@@ -213,6 +244,6 @@ class MatriculaFlowIT extends AbstractIntegrationTest {
         return objectMapper.readValue(result.getResponse().getContentAsString(), type);
     }
 
-    private record Catalogo(UUID turmaId) {
+    private record Catalogo(UUID turmaId, UUID disciplinaId, UUID periodoLetivoId) {
     }
 }
