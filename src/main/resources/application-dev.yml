@@ -5,6 +5,10 @@ spring:
     password: ${DB_PASSWORD:admin@123}
   jpa:
     show-sql: true
+  flyway:
+    # Schema (db/migration) + carga de cenários de teste (db/testdata).
+    # Profiles test/prod usam apenas db/migration (application.yml).
+    locations: classpath:db/migration,classpath:db/testdata
 
 springdoc:
   api-docs:
