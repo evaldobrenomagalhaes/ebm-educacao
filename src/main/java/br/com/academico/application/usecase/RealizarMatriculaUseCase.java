@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.academico.application.command.RealizarMatriculaCommand;
 import br.com.academico.application.dto.MatriculaDto;
+import br.com.academico.domain.event.DomainEventPublisher;
 import br.com.academico.domain.exception.DuplicateMatriculaException;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.model.Matricula;
@@ -22,15 +23,18 @@ public class RealizarMatriculaUseCase {
     private final MatriculaRepository matriculaRepository;
     private final AlunoRepository alunoRepository;
     private final TurmaRepository turmaRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     public RealizarMatriculaUseCase(
             MatriculaRepository matriculaRepository,
             AlunoRepository alunoRepository,
-            TurmaRepository turmaRepository
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
     ) {
         this.matriculaRepository = Objects.requireNonNull(matriculaRepository);
         this.alunoRepository = Objects.requireNonNull(alunoRepository);
         this.turmaRepository = Objects.requireNonNull(turmaRepository);
+        this.domainEventPublisher = Objects.requireNonNull(domainEventPublisher);
     }
 
     public MatriculaDto executar(RealizarMatriculaCommand command) {
@@ -52,6 +56,7 @@ public class RealizarMatriculaUseCase {
 
         Matricula matricula = Matricula.realizar(alunoId, turmaId);
         matriculaRepository.salvar(matricula);
+        domainEventPublisher.publishAll(matricula.pullDomainEvents());
         return MatriculaDto.from(matricula);
     }
 }

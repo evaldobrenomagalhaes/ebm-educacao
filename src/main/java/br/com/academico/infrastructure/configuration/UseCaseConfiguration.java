@@ -33,6 +33,7 @@ import br.com.academico.application.usecase.ListarDisciplinasUseCase;
 import br.com.academico.application.usecase.ListarPeriodosLetivosUseCase;
 import br.com.academico.application.usecase.ListarTurmasUseCase;
 import br.com.academico.application.usecase.RealizarMatriculaUseCase;
+import br.com.academico.domain.event.DomainEventPublisher;
 import br.com.academico.domain.repository.AlunoRepository;
 import br.com.academico.domain.repository.CursoRepository;
 import br.com.academico.domain.repository.DisciplinaRepository;
@@ -200,35 +201,49 @@ public class UseCaseConfiguration {
     public RealizarMatriculaUseCase realizarMatriculaUseCase(
             MatriculaRepository matriculaRepository,
             AlunoRepository alunoRepository,
-            TurmaRepository turmaRepository
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
     ) {
-        return new RealizarMatriculaUseCase(matriculaRepository, alunoRepository, turmaRepository);
+        return new RealizarMatriculaUseCase(
+                matriculaRepository,
+                alunoRepository,
+                turmaRepository,
+                domainEventPublisher
+        );
     }
 
     @Bean
     public ConfirmarMatriculaUseCase confirmarMatriculaUseCase(
             MatriculaRepository matriculaRepository,
-            TurmaRepository turmaRepository
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
     ) {
-        return new ConfirmarMatriculaUseCase(matriculaRepository, turmaRepository);
+        return new ConfirmarMatriculaUseCase(matriculaRepository, turmaRepository, domainEventPublisher);
     }
 
     @Bean
     public CancelarMatriculaUseCase cancelarMatriculaUseCase(
             MatriculaRepository matriculaRepository,
-            TurmaRepository turmaRepository
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
     ) {
-        return new CancelarMatriculaUseCase(matriculaRepository, turmaRepository);
+        return new CancelarMatriculaUseCase(matriculaRepository, turmaRepository, domainEventPublisher);
     }
 
     @Bean
-    public AbrirTurmaUseCase abrirTurmaUseCase(TurmaRepository turmaRepository) {
-        return new AbrirTurmaUseCase(turmaRepository);
+    public AbrirTurmaUseCase abrirTurmaUseCase(
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
+    ) {
+        return new AbrirTurmaUseCase(turmaRepository, domainEventPublisher);
     }
 
     @Bean
-    public FecharTurmaUseCase fecharTurmaUseCase(TurmaRepository turmaRepository) {
-        return new FecharTurmaUseCase(turmaRepository);
+    public FecharTurmaUseCase fecharTurmaUseCase(
+            TurmaRepository turmaRepository,
+            DomainEventPublisher domainEventPublisher
+    ) {
+        return new FecharTurmaUseCase(turmaRepository, domainEventPublisher);
     }
 
     @Bean

@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.academico.application.command.AbrirTurmaCommand;
 import br.com.academico.application.dto.TurmaDto;
+import br.com.academico.domain.event.DomainEventPublisher;
 import br.com.academico.domain.exception.EntityNotFoundException;
 import br.com.academico.domain.model.Turma;
 import br.com.academico.domain.repository.TurmaRepository;
@@ -15,9 +16,11 @@ import java.util.Objects;
 public class AbrirTurmaUseCase {
 
     private final TurmaRepository turmaRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
-    public AbrirTurmaUseCase(TurmaRepository turmaRepository) {
+    public AbrirTurmaUseCase(TurmaRepository turmaRepository, DomainEventPublisher domainEventPublisher) {
         this.turmaRepository = Objects.requireNonNull(turmaRepository);
+        this.domainEventPublisher = Objects.requireNonNull(domainEventPublisher);
     }
 
     public TurmaDto executar(AbrirTurmaCommand command) {
@@ -27,6 +30,7 @@ public class AbrirTurmaUseCase {
                 .orElseThrow(() -> EntityNotFoundException.of("Turma", command.turmaId()));
         turma.abrir();
         turmaRepository.salvar(turma);
+        domainEventPublisher.publishAll(turma.pullDomainEvents());
         return TurmaDto.from(turma);
     }
 }
