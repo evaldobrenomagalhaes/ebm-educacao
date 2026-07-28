@@ -1,0 +1,16 @@
+target/
+.git/
+.github/
+.idea/
+.vscode/
+.cursor/
+*.iml
+.env
+.env.local
+docs/
+frontend/
+**/agent-transcripts/
+**/.DS_Store
+*.log
+coverage/
+jacoco.exec
