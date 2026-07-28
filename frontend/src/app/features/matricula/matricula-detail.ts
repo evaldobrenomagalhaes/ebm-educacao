@@ -3,6 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
 import { FeedbackService } from '../../core/services/feedback.service';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
@@ -10,6 +12,8 @@ import { StatusChip } from '../../shared/components/status-chip/status-chip';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 import { isNotFound } from '../../shared/utils/form-errors';
 import { Labels } from '../../shared/utils/labels';
+import { DisciplinaService } from '../disciplina/disciplina.service';
+import { PeriodoLetivoService } from '../periodo-letivo/periodo-letivo.service';
 import { AlunoService } from '../aluno/aluno.service';
 import { TurmaService } from '../turma/turma.service';
 import { Matricula } from './matricula.model';
@@ -31,6 +35,8 @@ export class MatriculaDetail implements OnInit {
   private readonly matriculaService = inject(MatriculaService);
   private readonly alunoService = inject(AlunoService);
   private readonly turmaService = inject(TurmaService);
+  private readonly disciplinaService = inject(DisciplinaService);
+  private readonly periodoService = inject(PeriodoLetivoService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
   private readonly confirmDialog = inject(ConfirmDialogService);
@@ -42,7 +48,7 @@ export class MatriculaDetail implements OnInit {
   readonly notFound = signal(false);
   readonly item = signal<Matricula | null>(null);
   readonly alunoNome = signal('');
-  readonly turmaCodigo = signal('');
+  readonly turmaLabel = signal('');
 
   ngOnInit(): void {
     this.load();
@@ -62,15 +68,8 @@ export class MatriculaDetail implements OnInit {
       next: (matricula) => {
         this.item.set(matricula);
         this.alunoNome.set(matricula.alunoId);
-        this.turmaCodigo.set(matricula.turmaId);
-        this.alunoService.buscarPorId(matricula.alunoId).subscribe({
-          next: (a) => this.alunoNome.set(a.nome),
-          error: () => undefined,
-        });
-        this.turmaService.buscarPorId(matricula.turmaId).subscribe({
-          next: (t) => this.turmaCodigo.set(t.codigo),
-          error: () => undefined,
-        });
+        this.turmaLabel.set(matricula.turmaId);
+        this.resolveLabels(matricula);
         this.loading.set(false);
       },
       error: (err) => {
@@ -80,6 +79,41 @@ export class MatriculaDetail implements OnInit {
         }
       },
     });
+  }
+
+  private resolveLabels(matricula: Matricula): void {
+    this.alunoService.buscarPorId(matricula.alunoId).subscribe({
+      next: (a) => this.alunoNome.set(a.nome),
+      error: () => undefined,
+    });
+
+    this.turmaService
+      .buscarPorId(matricula.turmaId)
+      .pipe(
+        switchMap((turma) =>
+          forkJoin({
+            turma: of(turma),
+            disciplina: this.disciplinaService.buscarPorId(turma.disciplinaId).pipe(
+              catchError(() => of(null)),
+            ),
+            periodo: this.periodoService.buscarPorId(turma.periodoLetivoId).pipe(
+              catchError(() => of(null)),
+            ),
+          }),
+        ),
+        catchError(() => of(null)),
+      )
+      .subscribe((result) => {
+        if (!result) {
+          return;
+        }
+        const parts = [
+          result.turma.codigo,
+          result.disciplina?.nome,
+          result.periodo?.codigo,
+        ].filter(Boolean);
+        this.turmaLabel.set(parts.join(' · '));
+      });
   }
 
   confirmar(): void {

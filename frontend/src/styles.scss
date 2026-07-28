@@ -127,6 +127,23 @@ a {
   font: var(--mat-sys-title-medium);
 }
 
+.cell-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cell-primary {
+  font-weight: 500;
+}
+
+.cell-secondary {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  word-break: break-all;
+}
+
 @keyframes ebm-fade-in {
   from {
     opacity: 0;

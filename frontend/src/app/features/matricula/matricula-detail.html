@@ -36,10 +36,12 @@
       <dt>Aluno</dt>
       <dd>
         <a [routerLink]="['/alunos', matricula.alunoId]">{{ alunoNome() }}</a>
+        <div class="cell-secondary" [title]="matricula.alunoId">{{ matricula.alunoId }}</div>
       </dd>
       <dt>Turma</dt>
       <dd>
-        <a [routerLink]="['/turmas', matricula.turmaId]">{{ turmaCodigo() }}</a>
+        <a [routerLink]="['/turmas', matricula.turmaId]">{{ turmaLabel() }}</a>
+        <div class="cell-secondary" [title]="matricula.turmaId">{{ matricula.turmaId }}</div>
       </dd>
       <dt>Status</dt>
       <dd>

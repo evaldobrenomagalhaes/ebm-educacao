@@ -21,23 +21,43 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Aluno (ID)</mat-label>
-      <input matInput formControlName="alunoId" />
+      <mat-label>Aluno</mat-label>
+      <mat-select formControlName="alunoId">
+        <mat-option value="">Todos</mat-option>
+        @for (aluno of lookups()?.alunos ?? []; track aluno.id) {
+          <mat-option [value]="aluno.id">{{ aluno.nome }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Turma (ID)</mat-label>
-      <input matInput formControlName="turmaId" />
+      <mat-label>Turma</mat-label>
+      <mat-select formControlName="turmaId">
+        <mat-option value="">Todas</mat-option>
+        @for (turma of lookups()?.turmas ?? []; track turma.id) {
+          <mat-option [value]="turma.id">{{ turma.codigo }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Período letivo (ID)</mat-label>
-      <input matInput formControlName="periodoLetivoId" />
+      <mat-label>Período letivo</mat-label>
+      <mat-select formControlName="periodoLetivoId">
+        <mat-option value="">Todos</mat-option>
+        @for (periodo of lookups()?.periodos ?? []; track periodo.id) {
+          <mat-option [value]="periodo.id">{{ periodo.codigo }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Disciplina (ID)</mat-label>
-      <input matInput formControlName="disciplinaId" />
+      <mat-label>Disciplina</mat-label>
+      <mat-select formControlName="disciplinaId">
+        <mat-option value="">Todas</mat-option>
+        @for (disciplina of lookups()?.disciplinas ?? []; track disciplina.id) {
+          <mat-option [value]="disciplina.id">{{ disciplina.codigo }} — {{ disciplina.nome }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <div class="filters__actions">
@@ -71,17 +91,29 @@
       <table mat-table [dataSource]="items()" class="mat-elevation-z0">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>ID</th>
-          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          <td mat-cell *matCellDef="let row">
+            <span class="cell-primary" [title]="row.id">{{ row.id | slice: 0 : 8 }}…</span>
+          </td>
         </ng-container>
 
-        <ng-container matColumnDef="alunoId">
+        <ng-container matColumnDef="aluno">
           <th mat-header-cell *matHeaderCellDef>Aluno</th>
-          <td mat-cell *matCellDef="let row">{{ row.alunoId }}</td>
+          <td mat-cell *matCellDef="let row">
+            <div class="cell-stack">
+              <span class="cell-primary">{{ row.alunoNome }}</span>
+              <span class="cell-secondary" [title]="row.alunoId">{{ row.alunoId | slice: 0 : 8 }}…</span>
+            </div>
+          </td>
         </ng-container>
 
-        <ng-container matColumnDef="turmaId">
+        <ng-container matColumnDef="turma">
           <th mat-header-cell *matHeaderCellDef>Turma</th>
-          <td mat-cell *matCellDef="let row">{{ row.turmaId }}</td>
+          <td mat-cell *matCellDef="let row">
+            <div class="cell-stack">
+              <span class="cell-primary">{{ turmaLabel(row) }}</span>
+              <span class="cell-secondary" [title]="row.turmaId">{{ row.turmaId | slice: 0 : 8 }}…</span>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
