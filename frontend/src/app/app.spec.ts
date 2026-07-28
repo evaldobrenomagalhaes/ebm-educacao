@@ -17,10 +17,19 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the shell brand', () => {
+  it('should render the shell brand logo', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('EBM Edu');
+    const logo = compiled.querySelector('img[src="ebm-edu.png"]');
+    expect(logo).toBeTruthy();
+    expect(logo?.getAttribute('alt')).toBe('EBM Edu');
+  });
+
+  it('should render the institutional footer', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('desafio técnico');
   });
 });

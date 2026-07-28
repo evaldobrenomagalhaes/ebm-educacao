@@ -7,8 +7,12 @@
     #drawer
   >
     <div class="shell__brand">
-      <span class="shell__brand-mark">EBM</span>
-      <span class="shell__brand-name">EBM Edu</span>
+      <img
+        class="shell__brand-logo"
+        src="ebm-edu.png"
+        width="180"
+        alt="EBM Edu"
+      />
     </div>
 
     <mat-nav-list class="shell__nav">
@@ -40,5 +44,11 @@
     <main class="shell__main">
       <router-outlet />
     </main>
+
+    <footer class="shell__footer">
+      <p>
+        Sistema Acadêmico — desafio técnico Desenvolvedor Júnior Full Stack (Tribe Lyceum / Techne).
+      </p>
+    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
