@@ -8,7 +8,7 @@
 
 # Sobre o Projeto
 
-O Sistema Acadêmico é uma API REST desenvolvida em **Java 21** e **Spring Boot 3**, cujo objetivo é gerenciar o processo de matrícula de alunos em turmas, respeitando regras de negócio típicas de instituições de ensino.
+O Sistema Acadêmico é uma API REST desenvolvida em **Java 21** e **Spring Boot 3.5**, cujo objetivo é gerenciar o processo de matrícula de alunos em turmas, respeitando regras de negócio típicas de instituições de ensino.
 
 Mais do que implementar funcionalidades, este projeto busca demonstrar decisões arquiteturais fundamentadas em literatura e práticas consolidadas do mercado.
 
@@ -30,13 +30,20 @@ Mais do que implementar funcionalidades, este projeto busca demonstrar decisões
 | Tecnologia | Versão / Observação |
 |------------|---------------------|
 | Java | 21 LTS |
-| Spring Boot | 3.x |
-| Spring Data JPA | 3.x |
-| Hibernate | 6.x |
+| Spring Boot | 3.5.16 (linha 3.x estável) |
+| Spring Data JPA | gerenciado pelo BOM do Spring Boot |
+| Hibernate | 6.x (via Spring Boot) |
 | Maven | 3.9+ |
-| PostgreSQL | Banco relacional da versão 1.0 |
+| PostgreSQL | 18 (imagem `postgres:18`) |
+| Flyway | Versionamento do schema |
 | Docker / Docker Compose | Ambiente local (banco + backend + frontend) |
-| OpenAPI / Swagger | Documentação interativa da API (MVP) |
+| Imagem Docker (backend) | Multi-stage Maven → `eclipse-temurin:21-jre` |
+| OpenAPI / Swagger | springdoc-openapi (`springdoc-openapi-starter-webmvc-ui`) |
+| Bean Validation | Jakarta Bean Validation |
+| Logging | SLF4J (Logback via Spring Boot) |
+| Erros HTTP | RFC 7807 `ProblemDetail` |
+| Domain Events | `ApplicationEventPublisher` + `@TransactionalEventListener(AFTER_COMMIT)` |
+| Configuração | `application.yml` + profiles `dev`, `test`, `prod` |
 | JUnit 5 | Testes |
 | Mockito | Testes |
 | Testcontainers | Testes de integração |
@@ -45,7 +52,7 @@ Mais do que implementar funcionalidades, este projeto busca demonstrar decisões
 | Checkstyle | Qualidade |
 | SpotBugs | Análise estática |
 | PMD | Qualidade |
-| Frontend | A especificar (Angular, TypeScript/JavaScript ou equivalente) |
+| Frontend | A especificar (porta `4200` no Compose) |
 
 ---
 
@@ -179,13 +186,18 @@ flowchart LR
 ```text
 .
 ├── docker-compose.yml
-├── Dockerfile                 # backend
-├── frontend/                  # a especificar (+ Dockerfile)
+├── Dockerfile                 # backend (multi-stage Maven → eclipse-temurin:21-jre)
+├── frontend/                  # a especificar (+ Dockerfile); porta 4200
 ├── docs/
 └── src/
     ├── main/
     │   ├── java/
     │   └── resources/
+    │       ├── application.yml
+    │       ├── application-dev.yml
+    │       ├── application-test.yml
+    │       ├── application-prod.yml
+    │       └── db/migration/   # Flyway
     └── test/
 ```
 
@@ -256,21 +268,33 @@ docker compose down     # encerra e remove os containers
 
 Serviços previstos no `docker-compose.yml`:
 
-| Serviço | Função | Porta (planejada) |
-|---------|--------|-------------------|
-| `db` | PostgreSQL | `5432` |
+| Serviço | Função | Porta |
+|---------|--------|-------|
+| `db` | PostgreSQL 18 | `5432` |
 | `backend` | API Spring Boot | `8080` |
-| `frontend` | UI (a especificar) | `4200` (ou a definida no Compose) |
+| `frontend` | UI (a especificar) | `4200` |
 
 Após o Compose subir:
 
 - API: `http://localhost:8080`
-- Swagger UI (OpenAPI): `http://localhost:8080/swagger-ui.html` (caminho final conforme springdoc/springfox na implementação)
-- Frontend: URL do serviço `frontend` (quando o módulo estiver especificado)
+- Swagger UI (springdoc-openapi): `http://localhost:8080/swagger-ui.html` (UI em `/swagger-ui/index.html`; spec em `/v3/api-docs`)
+- Frontend: `http://localhost:4200` (quando o módulo estiver especificado)
 
-Variáveis de conexão (`POSTGRES_*`, `SPRING_DATASOURCE_*`, URLs entre serviços) ficam no `docker-compose.yml` / `.env` do repositório. O backend usa o hostname do serviço `db` dentro da rede do Compose (não `localhost`).
+Credenciais locais do banco (Compose / profile `dev`):
 
-> Enquanto o frontend não estiver especificado, o serviço pode existir como placeholder no Compose; os fluxos da API podem ser validados via HTTP client (curl, Postman, Insomnia).
+| Variável | Valor |
+|----------|-------|
+| Database | `ebm-edu` |
+| Username | `admin` |
+| Password | `admin@123` |
+
+> O nome `ebm-edu` contém hífen; em SQL cru use identificador entre aspas (`"ebm-edu"`). A URL JDBC aceita o nome normalmente.
+
+Variáveis de conexão (`POSTGRES_*`, `SPRING_DATASOURCE_*`, URLs entre serviços) ficam no `docker-compose.yml` / `.env` do repositório. O backend usa o hostname do serviço `db` dentro da rede do Compose (não `localhost`). Profiles Spring: `dev`, `test`, `prod` via `application.yml` / `application-{profile}.yml`.
+
+CORS no MVP libera a origin do frontend (`http://localhost:4200`).
+
+> Enquanto o frontend não estiver especificado, o serviço pode existir como placeholder no Compose; os fluxos da API podem ser validados via Swagger UI ou HTTP client (curl, Postman, Insomnia).
 
 ## Alternativa: API com Maven (desenvolvimento)
 
@@ -278,17 +302,25 @@ Se preferir rodar só o backend na máquina host (com o banco já disponível, p
 
 ```bash
 docker compose up db -d
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Ajuste `application.properties` / `application.yml` para apontar ao PostgreSQL (exemplo):
+Configuração alinhada ao profile `dev` (`application-dev.yml`), exemplo:
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/ebm_edu
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ebm-edu
+    username: admin
+    password: admin@123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
 ```
+
+O schema é versionado com **Flyway** (`src/main/resources/db/migration`). Não usar `ddl-auto=update` no MVP.
 
 ## Executar os testes
 
@@ -358,13 +390,18 @@ Também valide:
 # Decisões Simples de Implementação
 
 - Regras de matrícula e de vagas ficam no **domínio** (entidades/aggregates), não nos controllers.
-- Persistência relacional com **JPA/Hibernate** sobre **PostgreSQL**.
+- Persistência relacional com **JPA/Hibernate** sobre **PostgreSQL 18**; schema com **Flyway**.
 - Ambiente local via **Docker Compose** (`db` + `backend` + `frontend`) com `docker compose up`.
-- Documentação da API com **OpenAPI/Swagger** no MVP (Swagger UI para explorar e testar endpoints).
+- Documentação da API com **springdoc-openapi** no MVP (Swagger UI + `/v3/api-docs`).
+- Validação de entrada na API com **Jakarta Bean Validation**; erros HTTP em **RFC 7807 `ProblemDetail`**.
+- Domain Events via `ApplicationEventPublisher` + `@TransactionalEventListener(AFTER_COMMIT)`.
+- Logging com **SLF4J**; configuração em `application.yml` com profiles `dev` / `test` / `prod`.
+- Imagem do backend: multi-stage Maven → `eclipse-temurin:21-jre`.
 - Separação em camadas alinhada à Arquitetura Hexagonal (ports/adapters).
 - Status de matrícula: `PENDENTE`, `CONFIRMADA`, `CANCELADA`.
 - Autenticação JWT / Spring Security ficam como **evolução** (não bloqueiam o MVP Junior).
-- Frontend será especificado em documento dedicado; o serviço já está previsto no Compose.
+- Frontend será especificado em documento dedicado; porta **4200** já definida no Compose.
+- Detalhamento em [Documento 22 — ADR](22%20-%20Registro%20de%20Decisões%20Arquiteturais%20(ADR).md) (ADR-002).
 
 ---
 
