@@ -9,5 +9,9 @@ export const routes: Routes = [
     path: 'cursos',
     loadChildren: () => import('./features/curso/curso.routes').then((m) => m.cursoRoutes),
   },
+  {
+    path: 'disciplinas',
+    loadChildren: () => import('./features/disciplina/disciplina.routes').then((m) => m.disciplinaRoutes),
+  },
   { path: '**', redirectTo: '' },
 ];
