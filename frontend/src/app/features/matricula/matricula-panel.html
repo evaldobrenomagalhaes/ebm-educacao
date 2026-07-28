@@ -1,0 +1,46 @@
+<section class="section-block">
+  <div class="section-block__header">
+    <h2 class="section-block__title">Matrículas</h2>
+    <a mat-flat-button color="primary" [routerLink]="novaLink()" [queryParams]="novaQuery()">
+      Nova matrícula
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="32" />
+      <span>Carregando matrículas…</span>
+    </div>
+  } @else if (items().length === 0) {
+    <app-empty-state message="Nenhuma matrícula." />
+  } @else {
+    <div class="table-wrap">
+      <table mat-table [dataSource]="items()" class="mat-elevation-z0">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <app-status-chip
+              [label]="Labels.statusMatricula(row.status)"
+              [highlighted]="row.status === 'CONFIRMADA'"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <a mat-button color="primary" [routerLink]="['/matriculas', row.id]">Ver</a>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  }
+</section>

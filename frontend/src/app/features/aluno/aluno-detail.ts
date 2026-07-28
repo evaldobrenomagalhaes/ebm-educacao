@@ -10,6 +10,7 @@ import { StatusChip } from '../../shared/components/status-chip/status-chip';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 import { isNotFound } from '../../shared/utils/form-errors';
 import { Labels } from '../../shared/utils/labels';
+import { MatriculaPanel } from '../matricula/matricula-panel';
 import { Aluno } from './aluno.model';
 import { AlunoService } from './aluno.service';
 
@@ -22,6 +23,7 @@ import { AlunoService } from './aluno.service';
     MatProgressSpinnerModule,
     EmptyState,
     StatusChip,
+    MatriculaPanel,
   ],
   templateUrl: './aluno-detail.html',
 })

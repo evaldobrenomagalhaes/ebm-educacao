@@ -1,0 +1,56 @@
+<section class="page">
+  <header class="page__header">
+    <h1 class="page__title">Nova matrícula</h1>
+    <div class="page__actions">
+      <a mat-button routerLink="/matriculas">Voltar</a>
+    </div>
+  </header>
+
+  @if (loadingOptions()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando opções…</span>
+    </div>
+  } @else {
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline">
+        <mat-label>Aluno</mat-label>
+        <mat-select formControlName="alunoId">
+          @for (aluno of alunos(); track aluno.id) {
+            <mat-option [value]="aluno.id">{{ aluno.nome }} ({{ aluno.email }})</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.alunoId.hasError('required') && form.controls.alunoId.touched) {
+          <mat-error>Informe o aluno</mat-error>
+        }
+        @if (form.controls.alunoId.hasError('api')) {
+          <mat-error>{{ form.controls.alunoId.getError('api') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Turma disponível</mat-label>
+        <mat-select formControlName="turmaId">
+          @for (turma of turmas(); track turma.id) {
+            <mat-option [value]="turma.id">
+              {{ turma.codigo }} — {{ turma.vagasDisponiveis }} vaga(s)
+            </mat-option>
+          }
+        </mat-select>
+        @if (form.controls.turmaId.hasError('required') && form.controls.turmaId.touched) {
+          <mat-error>Informe a turma</mat-error>
+        }
+        @if (form.controls.turmaId.hasError('api')) {
+          <mat-error>{{ form.controls.turmaId.getError('api') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="page__actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Salvando…' : 'Realizar matrícula' }}
+        </button>
+        <a mat-stroked-button routerLink="/matriculas">Cancelar</a>
+      </div>
+    </form>
+  }
+</section>

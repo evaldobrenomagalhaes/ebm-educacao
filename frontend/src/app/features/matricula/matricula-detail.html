@@ -1,0 +1,53 @@
+<section class="page">
+  @if (loading()) {
+    <div class="state-block">
+      <mat-spinner diameter="40" />
+      <span>Carregando matrícula…</span>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state
+      message="Matrícula não encontrada."
+      actionLabel="Voltar à lista"
+      (action)="router.navigate(['/matriculas'])"
+    />
+  } @else if (item(); as matricula) {
+    <header class="page__header">
+      <div>
+        <h1 class="page__title">Matrícula</h1>
+      </div>
+      <div class="page__actions">
+        @if (matricula.status === 'PENDENTE') {
+          <button mat-flat-button color="primary" type="button" [disabled]="actionBusy()" (click)="confirmar()">
+            Confirmar
+          </button>
+        }
+        @if (matricula.status === 'PENDENTE' || matricula.status === 'CONFIRMADA') {
+          <button mat-stroked-button color="warn" type="button" [disabled]="actionBusy()" (click)="cancelar()">
+            Cancelar matrícula
+          </button>
+        }
+        <a mat-button routerLink="/matriculas">Voltar</a>
+      </div>
+    </header>
+
+    <dl class="detail-grid">
+      <dt>ID</dt>
+      <dd>{{ matricula.id }}</dd>
+      <dt>Aluno</dt>
+      <dd>
+        <a [routerLink]="['/alunos', matricula.alunoId]">{{ alunoNome() }}</a>
+      </dd>
+      <dt>Turma</dt>
+      <dd>
+        <a [routerLink]="['/turmas', matricula.turmaId]">{{ turmaCodigo() }}</a>
+      </dd>
+      <dt>Status</dt>
+      <dd>
+        <app-status-chip
+          [label]="Labels.statusMatricula(matricula.status)"
+          [highlighted]="matricula.status === 'CONFIRMADA'"
+        />
+      </dd>
+    </dl>
+  }
+</section>
