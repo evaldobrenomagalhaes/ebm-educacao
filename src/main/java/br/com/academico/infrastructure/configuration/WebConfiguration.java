@@ -15,7 +15,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     private final String[] allowedOrigins;
 
-    public WebConfiguration(@Value("${app.cors.allowed-origins:}") String[] allowedOrigins) {
+    public WebConfiguration(@Value("${app.cors.allowed-origins:}") String... allowedOrigins) {
         this.allowedOrigins = Arrays.stream(allowedOrigins)
                 .map(String::trim)
                 .filter(origin -> !origin.isEmpty())
