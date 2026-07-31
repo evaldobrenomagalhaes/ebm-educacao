@@ -13,8 +13,6 @@ import br.com.academico.domain.valueobject.TurmaId;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 public class ListarMatriculasUseCase {
@@ -32,16 +30,11 @@ public class ListarMatriculasUseCase {
 
     public List<MatriculaDto> executar(ListarMatriculasQuery query) {
         Objects.requireNonNull(query, "Query é obrigatória");
-        Map<TurmaId, Turma> turmasPorId = indiceTurmas();
+        Map<TurmaId, Turma> turmasPorId = MatriculaFiltro.indiceTurmas(turmaRepository);
         return matriculaRepository.listar().stream()
                 .filter(matricula -> corresponde(matricula, query, turmasPorId))
                 .map(MatriculaDto::from)
                 .toList();
-    }
-
-    private Map<TurmaId, Turma> indiceTurmas() {
-        return turmaRepository.listar().stream()
-                .collect(Collectors.toMap(Turma::getId, Function.identity()));
     }
 
     private static boolean corresponde(
@@ -49,27 +42,18 @@ public class ListarMatriculasUseCase {
             ListarMatriculasQuery query,
             Map<TurmaId, Turma> turmasPorId
     ) {
-        if (query.status() != null && query.status() != matricula.getStatus()) {
-            return false;
-        }
         if (query.alunoId() != null && !query.alunoId().equals(matricula.getAlunoId().valor())) {
             return false;
         }
         if (query.turmaId() != null && !query.turmaId().equals(matricula.getTurmaId().valor())) {
             return false;
         }
-        if (query.periodoLetivoId() == null && query.disciplinaId() == null) {
-            return true;
-        }
-        Turma turma = turmasPorId.get(matricula.getTurmaId());
-        if (turma == null) {
-            return false;
-        }
-        if (query.periodoLetivoId() != null
-                && !query.periodoLetivoId().equals(turma.getPeriodoLetivoId().valor())) {
-            return false;
-        }
-        return query.disciplinaId() == null
-                || query.disciplinaId().equals(turma.getDisciplinaId().valor());
+        return MatriculaFiltro.correspondeStatusPeriodoDisciplina(
+                matricula,
+                query.status(),
+                query.periodoLetivoId(),
+                query.disciplinaId(),
+                turmasPorId
+        );
     }
 }

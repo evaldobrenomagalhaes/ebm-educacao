@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.academico.application.dto.MatriculaDto;
 import br.com.academico.application.query.ConsultarMatriculasPorAlunoQuery;
 import br.com.academico.domain.exception.EntityNotFoundException;
-import br.com.academico.domain.model.Matricula;
 import br.com.academico.domain.model.Turma;
 import br.com.academico.domain.repository.AlunoRepository;
 import br.com.academico.domain.repository.MatriculaRepository;
@@ -16,8 +15,6 @@ import br.com.academico.domain.valueobject.TurmaId;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 public class ConsultarMatriculasPorAlunoUseCase {
@@ -45,38 +42,16 @@ public class ConsultarMatriculasPorAlunoUseCase {
             throw EntityNotFoundException.of("Aluno", query.alunoId());
         }
 
-        Map<TurmaId, Turma> turmasPorId = indiceTurmas();
+        Map<TurmaId, Turma> turmasPorId = MatriculaFiltro.indiceTurmas(turmaRepository);
         return matriculaRepository.listarPorAluno(alunoId).stream()
-                .filter(matricula -> corresponde(matricula, query, turmasPorId))
+                .filter(matricula -> MatriculaFiltro.correspondeStatusPeriodoDisciplina(
+                        matricula,
+                        query.status(),
+                        query.periodoLetivoId(),
+                        query.disciplinaId(),
+                        turmasPorId
+                ))
                 .map(MatriculaDto::from)
                 .toList();
-    }
-
-    private Map<TurmaId, Turma> indiceTurmas() {
-        return turmaRepository.listar().stream()
-                .collect(Collectors.toMap(Turma::getId, Function.identity()));
-    }
-
-    private static boolean corresponde(
-            Matricula matricula,
-            ConsultarMatriculasPorAlunoQuery query,
-            Map<TurmaId, Turma> turmasPorId
-    ) {
-        if (query.status() != null && query.status() != matricula.getStatus()) {
-            return false;
-        }
-        if (query.periodoLetivoId() == null && query.disciplinaId() == null) {
-            return true;
-        }
-        Turma turma = turmasPorId.get(matricula.getTurmaId());
-        if (turma == null) {
-            return false;
-        }
-        if (query.periodoLetivoId() != null
-                && !query.periodoLetivoId().equals(turma.getPeriodoLetivoId().valor())) {
-            return false;
-        }
-        return query.disciplinaId() == null
-                || query.disciplinaId().equals(turma.getDisciplinaId().valor());
     }
 }
