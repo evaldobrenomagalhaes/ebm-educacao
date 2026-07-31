@@ -25,5 +25,6 @@ A documentação aprovada em `docs/` prevalece sobre inferências. Consulte ante
 | Convenções | 19 |
 | Frontend | 23–29 |
 | QA manual / seed | 30 |
+| Glossário técnico | 31 |
 
 Não invente entidades, casos de uso ou invariantes fora do que está documentado no MVP (Documento 21, §3). A UI não inventa operações nem duplica invariantes do backend.
